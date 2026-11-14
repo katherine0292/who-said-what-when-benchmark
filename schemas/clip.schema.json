@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "clip",
+  "type": "object",
+  "properties": {
+    "clip_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^yt:[A-Za-z0-9_-]{11}$"
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "source_window_reported_ms": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "duration_ms": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "category": {
+      "enum": [
+        "Science & Technology",
+        "Finance",
+        "Entertainment",
+        "Current Affairs & News",
+        "Sports",
+        "Health & Fitness",
+        "Education & Knowledge",
+        "Lifestyle & Daily"
+      ]
+    },
+    "topic": {
+      "type": "string",
+      "minLength": 1
+    },
+    "language": {
+      "const": "en"
+    },
+    "speaker_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "turn_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "enum": [
+        "text_aligned",
+        "needs_media_review"
+      ]
+    },
+    "review_flags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "split": {
+      "const": "pilot"
+    }
+  },
+  "required": [
+    "clip_id",
+    "source_id",
+    "source_url",
+    "source_window_reported_ms",
+    "duration_ms",
+    "category",
+    "topic",
+    "language",
+    "speaker_count",
+    "turn_count",
+    "status",
+    "review_flags",
+    "split"
+  ],
+  "additionalProperties": false
+}

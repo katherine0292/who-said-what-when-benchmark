@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "migration_audit",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^wsw_[0-9]{4,}$"
+    },
+    "clip_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "legacy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "legacy_media_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "legacy_turn_ids": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "legacy_evidence_envelope_ms": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "canonical_turn_ids": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "round1_quote_repair": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "aggregate_round1_fields_changed": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "aggregate_round2_fields_changed": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "legacy_transcript_matches_first_target_turn": {
+      "type": "boolean"
+    },
+    "origin_minus_audio_ms": {
+      "type": "integer"
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "editorial_note": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "clip_id",
+    "legacy_id",
+    "legacy_media_id",
+    "legacy_turn_ids",
+    "legacy_evidence_envelope_ms",
+    "canonical_turn_ids",
+    "round1_quote_repair",
+    "aggregate_round1_fields_changed",
+    "aggregate_round2_fields_changed",
+    "legacy_transcript_matches_first_target_turn",
+    "origin_minus_audio_ms",
+    "flags",
+    "editorial_note"
+  ],
+  "additionalProperties": false
+}

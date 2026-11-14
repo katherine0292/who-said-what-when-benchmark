@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "judgment",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^wsw_[0-9]{4,}$"
+    },
+    "point_scores": {
+      "type": "array",
+      "items": {
+        "enum": [
+          0,
+          0.5,
+          1
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 4
+    },
+    "material_contradiction": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "point_scores",
+    "material_contradiction"
+  ],
+  "additionalProperties": false
+}

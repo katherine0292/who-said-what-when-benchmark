@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0-pilot",
+  "questions": 25,
+  "clips": 25,
+  "source_videos": 5,
+  "legacy_turns": 178,
+  "source_group_counts": {
+    "yt:-8FM-qzzBDk": 2,
+    "yt:9uSXOr-AdAU": 5,
+    "yt:cWZI2RyI9wM": 8,
+    "yt:iWgEP0SZ6sc": 5,
+    "yt:q6POJ8FWyNw": 5
+  },
+  "categories": {
+    "Lifestyle & Daily": 2,
+    "Education & Knowledge": 23
+  },
+  "statuses": {
+    "needs_media_review": 7,
+    "text_aligned": 18
+  },
+  "annotated_audio_ms": 5686753,
+  "local_media_bytes": 1301714083,
+  "legacy_round1_quote_repairs_per_clip": 13,
+  "legacy_round1_quote_repairs_in_aggregate": 13,
+  "legacy_time_resolution_ms": 1000,
+  "multi_window_questions": 4,
+  "gold_questions": 0
+}
