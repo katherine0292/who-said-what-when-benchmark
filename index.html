@@ -51,8 +51,8 @@ code,.mono{font-family:var(--m);font-size:.88em}
 .menu-btn{display:flex;align-items:center;gap:10px;font-size:13px}
 .menu-btn i{display:grid;gap:4px;width:22px}.menu-btn i b{height:1.5px;background:currentColor;display:block}.menu-btn i b:last-child{width:14px}
 .top .sp{flex:1}
-.langs{display:flex;border:1px solid var(--line-2);border-radius:99px;padding:3px}
-.langs button{padding:5px 12px;border-radius:99px;font-size:12.5px;color:var(--ink-2)}
+.langs{display:flex;flex-shrink:0;border:1px solid var(--line-2);border-radius:99px;padding:3px}
+.langs button{padding:5px 12px;border-radius:99px;font-size:12.5px;color:var(--ink-2);white-space:nowrap}
 .langs button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
 .prog{position:absolute;left:0;bottom:0;height:2px;width:100%;background:linear-gradient(90deg,var(--who),var(--what),var(--when));transform-origin:0 50%;transform:scaleX(var(--p,0))}
 
@@ -394,6 +394,10 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
   .gauges{grid-template-columns:1fr 1fr 1fr}
   .dock-in{grid-template-columns:auto minmax(0,1fr)}
   .fcards,.rules,.gates{grid-template-columns:1fr}
+}
+@media (max-width:360px){
+  .top .in{gap:8px}
+  .top .word{font-size:11px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
