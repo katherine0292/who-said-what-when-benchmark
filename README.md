@@ -8,7 +8,7 @@ Given an interview or podcast clip and a natural-language question, a model must
 
 This repository provides a pilot dataset, a two-round annotation workflow, structured data formats, validation tools, and a reproducible scorer. It supports research on conversational audio understanding and error analysis for source-linked meeting notes, interview search, and audio assistants.
 
-[Interactive walkthrough](https://katherine0292.github.io/who-said-what-when-benchmark/portfolio/) · [Data card](docs/DATA_CARD.md) · [Annotation guide](docs/ANNOTATION_GUIDE.md) · [Evaluation protocol](docs/BENCHMARK_PROTOCOL.md)
+[Interactive walkthrough](https://katherine0292.github.io/who-said-what-when-benchmark/) · [Data card](docs/DATA_CARD.md) · [Annotation guide](docs/ANNOTATION_GUIDE.md) · [Evaluation protocol](docs/BENCHMARK_PROTOCOL.md)
 
 > **Release status: `0.1.0-pilot`.** The default evaluation uses 18 text-aligned items; 7 additional items require priority audio review. All 25 await independent listening review. The pilot supports workflow validation and error analysis; it does not yet provide a gold test set or a basis for reliable model rankings.
 

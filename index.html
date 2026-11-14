@@ -1,0 +1,7 @@
+---
+layout: null
+---
+{%- capture portfolio_page -%}
+{%- include_relative portfolio/index.html -%}
+{%- endcapture -%}
+{{- portfolio_page | replace: '../assets/', 'assets/' -}}
