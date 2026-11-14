@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN" class="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Who Said What When</title>
+<!doctype html><html lang="en" class="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Who Said What When</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500&display=swap">
 <style>/* Layout: a paper sheet with a fixed chapter rail and a corpus dock. Three colours carry the whole system: Who (blue), What (teal), When (amber). The illustrated cover introduces the audio-annotation studio. */
 :root{
@@ -405,7 +405,7 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
   <button class="menu-btn" id="menuBtn" aria-label="Menu"><i><b></b><b></b></i><span data-k="ui.menu"></span></button>
   <a class="word" href="#hero" aria-label="Who What When"><b>WHO</b><b>WHAT</b><b>WHEN</b></a>
   <span class="sp"></span>
-  <div class="langs" role="group" aria-label="Language"><button data-l="zh" aria-pressed="true">中文</button><button data-l="en" aria-pressed="false">EN</button></div>
+  <div class="langs" role="group" aria-label="Language"><button data-l="en" aria-pressed="true">EN</button><button data-l="zh" aria-pressed="false">中文</button></div>
 </div><div class="prog" id="prog"></div></header>
 
 <nav class="rail" id="rail" aria-label="Chapters"><ol id="railList"></ol><span class="dot" id="railDot"></span></nav>
@@ -679,15 +679,16 @@ Object.assign(COPY,{
  'hs.inEv':['正在证据内 · 第 {n} 段','Inside evidence {n}'],'hs.outEv':['证据之外','Outside evidence'],
  'hs.who.l':['此刻在说话','Speaking now']
 });
-var lang='zh';
-try{var sv=localStorage.getItem('wswLang');if(sv==='en'||sv==='zh')lang=sv;else if(/^en/i.test(navigator.language||''))lang='en'}catch(e){}
+var lang='en';
+// Only explicit language choices override English; ignore legacy automatic defaults.
+try{var sv=localStorage.getItem('wswPreferredLanguage');if(sv==='en'||sv==='zh')lang=sv}catch(e){}
 function t(k){var c=COPY[k];return c?c[lang==='zh'?0:1]:k}
 var listeners=[];
-function setLang(l){
+function setLang(l,remember){
   lang=l;document.documentElement.lang=l==='zh'?'zh-CN':'en';document.documentElement.classList.toggle('zh',l==='zh');document.documentElement.classList.toggle('en',l==='en');
   $$('[data-k]').forEach(function(n){n.textContent=t(n.dataset.k)});
   $$('.langs button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.l===l)});
-  try{localStorage.setItem('wswLang',l)}catch(e){}
+  if(remember){try{localStorage.setItem('wswPreferredLanguage',l)}catch(e){}}
   listeners.forEach(function(f){f()});
   document.title=l==='zh'?'谁在什么时候说了什么':'Who Said What When';
 }
@@ -925,7 +926,7 @@ if(FINE&&!RM){
 }
 
 /* ---------- init ---------- */
-$$('.langs button').forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.l)})});
+$$('.langs button').forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.l,true)})});
 setLang(lang);buildChips();buildHero();sizeEv();setPlay();onScroll();requestAnimationFrame(frame);
 })();
 </script></body></html>
