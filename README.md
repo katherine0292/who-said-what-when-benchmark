@@ -21,6 +21,7 @@ A fluent meeting summary can assign a guest's opinion to the host or give a time
 | [Migration audit](docs/MIGRATION_AUDIT.md) | Corrections and the seven items that need priority listening review |
 | [Inputs](data/inputs.jsonl), [references](data/references.jsonl), and [summary](data/summary.json) | The 25 converted pilot items |
 | [JSON Schemas](schemas/) | Machine-readable formats for annotation and evaluation files |
+| [Portfolio](https://katherine0292.github.io/who-said-what-when-benchmark/portfolio/) | An interactive walkthrough of the benchmark |
 
 ## Quick start
 

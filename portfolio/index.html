@@ -1,0 +1,930 @@
+<!doctype html><html lang="zh-CN" class="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Who Said What When</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500&display=swap">
+<style>/* Layout: a paper sheet with a fixed chapter rail and a corpus dock. Three colours carry the whole system: Who (blue), What (teal), When (amber). The hero is an audio-annotation studio. */
+:root{
+  --bg:#E9EDEE; --paper:#FFFFFF; --paper-2:#F5F7F7; --ink:#0E191B; --ink-2:#4B5B5E; --ink-3:#889698; --line:#DFE5E6; --line-2:#C9D2D4;
+  --who:#5B7CFA; --what:#14A89C; --when:#F29A2E;
+  --who-s:#EAEFFF; --what-s:#DDF4F1; --when-s:#FFEFD9;
+  --who-i:#3652C4; --what-i:#0B7A71; --when-i:#9A5808;
+  --studio:#09161A; --studio-2:#0F2227; --studio-ink:#EAF3F4; --studio-ink-2:#94A9AC; --studio-line:rgba(255,255,255,.11);
+  --ok:#2E8B57; --bad:#C2453A;
+  --f:"Inter Tight","Noto Sans SC",-apple-system,"PingFang SC","Helvetica Neue",Arial,sans-serif;
+  --m:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --ease:cubic-bezier(.22,.8,.2,1); --r:18px; --wrap:1180px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#050A0B; --paper:#0D1618; --paper-2:#121D20; --ink:#EAF2F3; --ink-2:#A3B4B7; --ink-3:#6B7C80; --line:#1F2C2F; --line-2:#2F4145;
+  --who:#7C97FF; --what:#2BC7BA; --when:#F6AE55; --who-s:#161D3A; --what-s:#0F2B29; --when-s:#2E2112;
+  --who-i:#A9BAFF; --what-i:#6FE0D5; --when-i:#FFC882; --studio:#050D10; --studio-2:#0B181C; --ok:#6CC08D; --bad:#F0806F; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#050A0B; --paper:#0D1618; --paper-2:#121D20; --ink:#EAF2F3; --ink-2:#A3B4B7; --ink-3:#6B7C80; --line:#1F2C2F; --line-2:#2F4145;
+  --who:#7C97FF; --what:#2BC7BA; --when:#F6AE55; --who-s:#161D3A; --what-s:#0F2B29; --when-s:#2E2112;
+  --who-i:#A9BAFF; --what-i:#6FE0D5; --when-i:#FFC882; --studio:#050D10; --studio-2:#0B181C; --ok:#6CC08D; --bad:#F0806F; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--f);font-size:15.5px;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;padding-bottom:64px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:90;background:var(--paper)}
+img,video,canvas,svg{max-width:100%}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;padding:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--what);outline-offset:3px;border-radius:6px}
+h1,h2,h3,h4,p,ul,ol,figure,dl{margin:0}
+h1,h2,h3{font-weight:300;letter-spacing:-.025em;text-wrap:balance}
+html.zh h1,html.zh h2,html.zh h3{font-weight:400;letter-spacing:-.005em;word-break:keep-all;overflow-wrap:anywhere}
+.lbl{display:block;font:500 11px/1.3 var(--m);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+html.zh .lbl{letter-spacing:.06em}
+.muted{color:var(--ink-2)}.small{font-size:14px}
+.num{font-variant-numeric:tabular-nums}
+code,.mono{font-family:var(--m);font-size:.88em}
+
+.sheet{margin:0 auto;background:var(--paper);max-width:1480px;border-radius:0 0 28px 28px;overflow:clip;position:relative}
+@media (min-width:900px){.sheet{margin:14px 14px 0;border-radius:28px;max-width:none}}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+@media (min-width:1280px){.wrap{padding-left:200px;padding-right:56px;max-width:1440px}}
+
+/* top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:70;background:color-mix(in srgb,var(--paper) 88%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.top .in{display:flex;align-items:center;gap:14px;height:58px;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+.word{display:inline-flex;gap:.5ch;font:600 13px/1 var(--m);letter-spacing:.12em;text-decoration:none}
+.word b:nth-child(1){color:var(--who-i)}.word b:nth-child(2){color:var(--what-i)}.word b:nth-child(3){color:var(--when-i)}
+.menu-btn{display:flex;align-items:center;gap:10px;font-size:13px}
+.menu-btn i{display:grid;gap:4px;width:22px}.menu-btn i b{height:1.5px;background:currentColor;display:block}.menu-btn i b:last-child{width:14px}
+.top .sp{flex:1}
+.langs{display:flex;border:1px solid var(--line-2);border-radius:99px;padding:3px}
+.langs button{padding:5px 12px;border-radius:99px;font-size:12.5px;color:var(--ink-2)}
+.langs button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.prog{position:absolute;left:0;bottom:0;height:2px;width:100%;background:linear-gradient(90deg,var(--who),var(--what),var(--when));transform-origin:0 50%;transform:scaleX(var(--p,0))}
+
+/* rail */
+.rail{position:fixed;left:30px;top:50%;transform:translateY(-50%);z-index:60;display:none;transition:opacity .4s var(--ease)}
+@media (min-width:1280px){.rail{display:block}}
+.rail ol{list-style:none;margin:0;padding:14px 46px 14px 16px;display:grid;gap:7px;border-left:1px solid var(--line-2);position:relative;perspective:520px}
+.rail li{transform-origin:0 50%;transition:transform .28s var(--ease),opacity .28s;will-change:transform}
+.rail li button{font-size:12px;color:var(--ink-3);transition:color .3s;text-align:left;padding:1px 0}
+.rail li button:hover{color:var(--ink)}
+.rail li.on button{color:var(--ink);font-weight:500}
+.rail .dot{position:absolute;left:-5px;top:0;width:9px;height:9px;border-radius:50%;background:var(--what);box-shadow:0 0 0 4px color-mix(in srgb,var(--what) 25%,transparent);transition:transform .55s var(--ease)}
+.rail.hot li button{color:var(--ink-2)}.rail.hot li.near button{color:var(--ink)}
+.rail.away{opacity:0;pointer-events:none}
+
+/* menu */
+.menu{position:fixed;inset:0;z-index:95;background:color-mix(in srgb,var(--paper) 95%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);padding:max(22px,env(safe-area-inset-top,0px)) max(22px,env(safe-area-inset-right,0px)) 22px max(22px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;clip-path:circle(0% at 60px 32px);transition:clip-path .7s var(--ease);visibility:hidden;overflow:auto}
+.menu.open{clip-path:circle(150% at 60px 32px);visibility:visible}
+.menu .mh{display:flex;justify-content:space-between;align-items:center;height:40px}
+.menu .mh button{border:1px solid var(--line-2);border-radius:99px;padding:6px 14px;font-size:13px}
+.menu ol{list-style:none;margin:30px 0 auto;padding:0;display:grid;gap:2px;max-width:560px}
+.menu li button{display:flex;align-items:baseline;gap:16px;font-size:clamp(18px,2vw,24px);color:var(--ink-2);padding:6px 0;text-align:left}
+.menu li button small{color:var(--ink-3);font:12px var(--m);min-width:24px}
+.menu li button:hover{color:var(--what-i)}
+
+/* ---------------- hero: the annotation studio ---------------- */
+.studio{background:var(--studio);color:var(--studio-ink);position:relative;overflow:hidden;border-radius:0}
+.studio::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 80% at 15% 0%,rgba(91,124,250,.18),transparent 60%),radial-gradient(50% 70% at 90% 10%,rgba(242,154,46,.14),transparent 60%),radial-gradient(60% 60% at 50% 100%,rgba(20,168,156,.16),transparent 60%);pointer-events:none}
+.st-wrap{position:relative;max-width:1280px;margin:0 auto;padding:clamp(26px,3.6vw,48px) max(18px,env(safe-area-inset-left,0px)) clamp(22px,3vw,36px)}
+.st-k{font:500 11.5px/1 var(--m);letter-spacing:.14em;text-transform:uppercase;color:var(--studio-ink-2)}
+.st-title{font-size:clamp(46px,9.4vw,132px);line-height:.92;font-weight:600;letter-spacing:-.05em;margin:12px 0 clamp(16px,2.4vw,28px);display:flex;flex-wrap:wrap;gap:0 .28em}
+html.zh .st-title{font-weight:500;letter-spacing:-.02em;font-size:clamp(40px,7.6vw,104px)}
+.st-title .w1{color:var(--who)}.st-title .w2{color:var(--what)}.st-title .w3{color:var(--when)}
+.st-q{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px 18px;align-items:baseline;margin-bottom:16px;max-width:1000px}
+.st-q p{font-size:clamp(16px,1.6vw,20px);line-height:1.45;min-height:2.9em}
+.daw{position:relative;border:1px solid var(--studio-line);border-radius:16px;background:rgba(255,255,255,.03);padding:0 0 0 0;overflow:hidden;user-select:none;touch-action:pan-y;cursor:ew-resize}
+.daw-ruler{position:relative;height:28px;margin-left:104px;border-bottom:1px solid var(--studio-line)}
+.daw-ruler i{position:absolute;top:0;bottom:0;border-left:1px solid var(--studio-line)}
+.daw-ruler i::after{content:attr(data-t);position:absolute;left:6px;top:6px;font:10.5px/1 var(--m);color:var(--studio-ink-2)}
+.lane{display:grid;grid-template-columns:104px minmax(0,1fr);height:64px;border-bottom:1px solid var(--studio-line);position:relative}
+.lane:last-of-type{border-bottom:0}
+.lane .lh{display:flex;flex-direction:column;justify-content:center;padding-left:16px;border-right:1px solid var(--studio-line)}
+.lane .lh b{font:600 11px/1 var(--m);letter-spacing:.08em}
+.lane .lh small{font:10.5px/1 var(--m);color:var(--studio-ink-2);margin-top:5px}
+.lane .lt{position:relative}
+.lane canvas{position:absolute;inset:0;width:100%;height:100%}
+.ev-layer{position:absolute;left:104px;right:0;top:28px;bottom:0;pointer-events:none}
+.ev{position:absolute;top:0;bottom:0;border:1.5px solid var(--when);border-radius:8px;background:rgba(242,154,46,.1);transition:background .25s,box-shadow .25s}
+.ev.on{background:rgba(242,154,46,.26);box-shadow:0 0 0 3px rgba(242,154,46,.25)}
+.ev b{position:absolute;left:-1px;top:-1px;transform:translate(-30%,-45%);width:20px;height:20px;border-radius:50%;background:var(--when);color:#2a1700;font:700 11px/20px var(--f);text-align:center}
+.playhead{position:absolute;top:0;bottom:0;left:104px;width:0;pointer-events:none}
+.playhead i{position:absolute;left:0;top:0;bottom:0;width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 12px rgba(255,255,255,.6)}
+.playhead b{position:absolute;left:0;top:4px;transform:translateX(-50%);background:#fff;color:#0a161a;font:600 10.5px/1 var(--m);padding:3px 6px;border-radius:5px;white-space:nowrap}
+.st-res{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin-top:14px;border:1px solid var(--studio-line);border-radius:14px;overflow:hidden}
+.st-res>div{padding:12px 16px;border-right:1px solid var(--studio-line);min-width:0}
+.st-res>div:last-child{border-right:0}
+.st-res .lbl{color:var(--studio-ink-2);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.st-res .lbl::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--c)}
+.st-res b{font:500 15px/1.4 var(--f);display:block}
+.st-res .rw{--c:var(--who)}.st-res .rn{--c:var(--what)}.st-res .rh{--c:var(--when)}
+.st-res .live{color:var(--c);font:600 12px var(--m);margin-top:3px;display:block;min-height:1.2em}
+.st-ctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
+.st-chips{display:flex;gap:8px;flex-wrap:wrap;flex:1}
+.st-chips button{border:1px solid var(--studio-line);border-radius:99px;padding:7px 13px;font-size:13px;color:var(--studio-ink)}
+.st-chips button[aria-pressed="true"]{background:var(--studio-ink);color:var(--studio);border-color:var(--studio-ink)}
+.st-play{border:1px solid var(--studio-line);border-radius:99px;padding:7px 14px;font:12px var(--m);color:var(--studio-ink)}
+.st-hint{font-size:12.5px;color:var(--studio-ink-2);margin-top:10px}
+
+/* ---------------- chapters ---------------- */
+section.ch{position:relative;padding-block:clamp(36px,4.4vw,64px)}
+section.ch.alt{background:var(--paper-2)}
+.head{display:grid;gap:8px;margin-bottom:clamp(18px,2.4vw,30px)}
+.head .row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.head .no{font:600 12px/1 var(--m);color:var(--ink-3)}
+.wtag{display:inline-flex;gap:5px}
+.wtag i{width:9px;height:9px;border-radius:50%;background:var(--line-2)}
+.wtag i.who.on{background:var(--who)}.wtag i.what.on{background:var(--what)}.wtag i.when.on{background:var(--when)}
+.head h2{font-size:clamp(24px,2.7vw,36px);line-height:1.2;max-width:28ch;position:relative;padding-bottom:14px}
+html.zh .head h2{line-height:1.36;max-width:24em;font-size:clamp(22px,2.4vw,31px)}
+.head h2::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:72px;border-radius:2px;background:linear-gradient(90deg,var(--who),var(--what),var(--when));transform-origin:0 50%}
+.js .head h2::after{transform:scaleX(0);transition:transform 1s var(--ease)}
+.js .head.in h2::after{transform:scaleX(1)}
+.head .lede{font-size:15.5px;color:var(--ink-2);max-width:68ch}
+.blk{margin-top:clamp(24px,3vw,40px)}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(14px,2.2vw,28px)}
+.g2>*{min-width:0}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:clamp(16px,1.8vw,22px);min-width:0}
+.alt .card{background:var(--paper)}
+.k{margin-bottom:10px}
+.sub{font-size:clamp(16px,1.3vw,18px);color:var(--ink-2);max-width:56ch}
+
+/* intro */
+.intro{padding-top:clamp(28px,3.4vw,48px)}
+.intro h1{font-size:clamp(26px,3.1vw,42px);font-weight:400;line-height:1.2;letter-spacing:-.025em;margin:8px 0 12px;max-width:24em}
+html.en .intro h1{font-weight:300}
+.meta2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(24px,5vw,72px);margin-top:20px}
+.meta2>div{border-top:1px solid var(--line-2);padding:12px 0 16px;min-width:0}
+.meta2 .lbl{margin-bottom:5px}
+.meta2 p{font-size:15px;line-height:1.55}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);margin-top:22px}
+.stats>div{padding:16px 16px 18px 0;border-bottom:1px solid var(--line);min-width:0}
+.stats>div:not(:nth-child(4n+1)){padding-left:20px;border-left:1px solid var(--line)}
+.stats b{display:block;font-size:clamp(34px,3.6vw,50px);font-weight:300;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.stats>div:nth-child(1) b{color:var(--who-i)}.stats>div:nth-child(2) b{color:var(--what-i)}.stats>div:nth-child(3) b{color:var(--when-i)}
+.stats p{margin-top:8px;font-size:13.5px;color:var(--ink-2);max-width:26ch}
+
+/* why: pipeline + failure diagrams */
+.pipe{display:grid;grid-template-columns:1fr 26px 1fr 26px 1fr;align-items:stretch;gap:0}
+.pipe .fn{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--paper)}
+.pipe .fn i{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--paper);font:600 11px var(--m);font-style:normal;margin-bottom:8px}
+.pipe .fn b{display:block;font-weight:500}
+.pipe .fn p{font-size:13.5px;color:var(--ink-2)}
+.pipe .fa{align-self:center;text-align:center;color:var(--ink-3);font-style:normal}
+.fcards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.fc{border:1px solid var(--line);border-radius:var(--r);padding:16px;background:var(--paper);display:flex;flex-direction:column;gap:8px;min-width:0;transition:transform .35s var(--ease),border-color .3s}
+.fc:hover{transform:translateY(-3px)}
+.fc:nth-child(1):hover{border-color:var(--who)}.fc:nth-child(2):hover{border-color:var(--what)}.fc:nth-child(3):hover{border-color:var(--when)}.fc:nth-child(4):hover{border-color:var(--ink-3)}
+.fc svg{width:100%;height:56px;display:block;margin-bottom:2px}
+.fc .fi{font:600 11px var(--m);color:var(--ink-3)}
+.fc h3{font-size:16px;font-weight:500;letter-spacing:0}
+.fc p{font-size:13.5px;color:var(--ink-2)}
+.fc small{display:block;padding-top:8px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-3)}
+.fc em{font-style:normal;font-size:12.5px;color:var(--what-i)}
+
+/* task */
+.io{display:grid;grid-template-columns:minmax(0,1fr) 130px minmax(0,1fr);gap:0;align-items:stretch}
+.io-box{border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;background:var(--paper)}
+.io-box ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px;font-size:14.5px}
+.io-box ul li::before{content:"";display:inline-block;width:7px;height:7px;border-radius:2px;margin-right:9px;background:var(--ink-3)}
+.io-box.out li:nth-child(1)::before{background:var(--who)}.io-box.out li:nth-child(2)::before{background:var(--what)}.io-box.out li:nth-child(3)::before{background:var(--when)}
+.io-mid{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.io-mid b{font:600 11px var(--m);letter-spacing:.1em;border:1px solid var(--ink);border-radius:99px;padding:5px 12px}
+.io-mid .wire{display:flex;gap:4px}.io-mid .wire i{width:6px;height:6px;border-radius:50%;background:var(--line-2);animation:blink 1.6s ease-in-out infinite}
+.io-mid .wire i:nth-child(2){animation-delay:.2s}.io-mid .wire i:nth-child(3){animation-delay:.4s}
+@keyframes blink{50%{background:var(--what)}}
+pre.code{margin:0;background:var(--studio);color:var(--studio-ink);border-radius:14px;padding:16px 20px;overflow-x:auto;font:12.5px/1.8 var(--m)}
+pre.code .c-k{color:var(--who)}pre.code .c-s{color:var(--what)}pre.code .c-n{color:var(--when)}pre.code .c-p{color:var(--studio-ink-2)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--paper)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:620px}
+th,td{text-align:left;vertical-align:middle;padding:10px 14px;border-bottom:1px solid var(--line)}
+th{font:500 10.5px var(--m);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.y i{display:block;width:14px;height:14px;border-radius:50%;background:var(--what);margin:0 auto}
+th:nth-child(n+2):nth-child(-n+5),td:nth-child(n+2):nth-child(-n+5){text-align:center}
+
+/* data */
+.gantt{display:grid;gap:10px}
+.gr{display:grid;grid-template-columns:132px minmax(0,1fr);gap:12px;align-items:center}
+.gr>span{font:500 11px var(--m);color:var(--ink-2)}
+.gt{position:relative;height:26px;display:flex;gap:2px}
+.gt i{display:block;height:100%;border-radius:5px;background:var(--c);position:relative;transition:transform .25s var(--ease),filter .25s}
+.gt i.rev{background:repeating-linear-gradient(135deg,var(--c) 0 5px,color-mix(in srgb,var(--c) 40%,transparent) 5px 9px)}
+.gt i:hover{transform:translateY(-3px);filter:brightness(1.1)}
+.gleg{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2);margin-top:12px}
+.gleg i{display:inline-block;width:18px;height:10px;border-radius:3px;margin-right:6px;vertical-align:middle;background:var(--what)}
+.gleg i.h{background:repeating-linear-gradient(135deg,var(--what) 0 4px,transparent 4px 7px)}
+.dgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:14px;margin-top:14px}
+.donut-wrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.donut{width:112px;height:112px;border-radius:50%;background:conic-gradient(var(--what) 0 72%,var(--when) 72% 100%);display:grid;place-items:center;position:relative}
+.donut::after{content:"";position:absolute;inset:14px;border-radius:50%;background:var(--paper)}
+.donut b{position:relative;z-index:1;font-size:26px;font-weight:300}.donut small{font-size:12px;color:var(--ink-3)}
+.dl2{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:14px;flex:1;min-width:150px}
+.dl2 li{display:flex;align-items:center;gap:8px}.dl2 li b{margin-left:auto;font-weight:500}
+.dl2 li i{width:10px;height:10px;border-radius:3px;background:var(--what)}.dl2 li i.d2{background:var(--when)}
+.stack{display:flex;height:10px;border-radius:6px;overflow:hidden;margin:6px 0 10px;background:var(--line)}
+.stack i{display:block;width:var(--w)}.stack .s1{background:var(--what)}.stack .s2{background:var(--when)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line-2);border-radius:99px;padding:7px 13px;font-size:13.5px;background:var(--paper)}
+.multi b{font-size:44px;font-weight:300;letter-spacing:-.04em;color:var(--when-i);display:block;line-height:1}
+.multi p{font-size:13.5px;color:var(--ink-2);margin-top:6px}
+.mini-ev{position:relative;height:16px;border-radius:5px;background:var(--line);margin-top:12px}
+.mini-ev i{position:absolute;top:0;bottom:0;border-radius:5px;background:var(--when)}
+
+/* annotation */
+.tape{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:0;position:relative}
+.tape>div{position:relative;padding:34px 14px 0 0;min-width:0}
+.tape>div::before{content:"";position:absolute;left:0;right:0;top:11px;height:3px;background:var(--line-2);border-radius:2px}
+.tape>div.done::before{background:var(--what)}
+.tape>div i{position:absolute;left:0;top:3px;width:20px;height:20px;border-radius:50%;background:var(--paper);border:3px solid var(--line-2);z-index:1}
+.tape>div.done i{border-color:var(--what);background:var(--what)}
+.tape b{display:block;font-weight:500;font-size:14.5px;line-height:1.35}
+.tape em{display:inline-block;font:500 10.5px var(--m);font-style:normal;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px;margin:4px 0 6px;background:var(--line);color:var(--ink-2)}
+.tape .done em{background:var(--what-s);color:var(--what-i)}
+.tape p{font-size:13px;color:var(--ink-2);line-height:1.5}
+.rules{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.rules>div{border-top:2px solid var(--ink);padding-top:12px;min-width:0}
+.rules code{display:inline-block;background:var(--what-s);color:var(--what-i);border-radius:6px;padding:3px 8px;font-size:12px}
+.rules b{display:block;font-weight:500;margin:8px 0 4px}
+.rules p{font-size:13.5px;color:var(--ink-2)}
+.errs{display:flex;flex-wrap:wrap;gap:8px}
+.errs span{border:1.5px dashed var(--bad);color:var(--bad);border-radius:99px;padding:6px 13px;font-size:13.5px}
+
+/* scoring */
+.wcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.wc{border-radius:var(--r);padding:16px;background:var(--bgc);border:1px solid color-mix(in srgb,var(--cc) 35%,transparent);min-width:0}
+.wc.who{--cc:var(--who);--bgc:var(--who-s);--ci:var(--who-i)}.wc.what{--cc:var(--what);--bgc:var(--what-s);--ci:var(--what-i)}.wc.when{--cc:var(--when);--bgc:var(--when-s);--ci:var(--when-i)}
+.wc>.wh{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;color:var(--ci)}
+.wc>.wh b{font-size:22px;font-weight:600;letter-spacing:-.02em}
+.wc>.wh span{font:500 11px var(--m);letter-spacing:.06em;text-transform:uppercase;opacity:.85}
+.mc{background:var(--paper);border-radius:12px;padding:12px 14px;margin-top:8px}
+.mc b{display:block;font-weight:500;font-size:14.5px}
+.mc p{font-size:13px;color:var(--ink-2);margin-top:2px}
+.mc .tg{display:inline-block;font:600 10px var(--m);letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:5px;margin-bottom:6px;background:var(--line);color:var(--ink-2)}
+.mc .tg.h{background:var(--when-s);color:var(--when-i)}.mc .tg.a{background:var(--what-s);color:var(--what-i)}
+.together{margin-top:12px;border-radius:var(--r);padding:16px;background:linear-gradient(100deg,var(--who-s),var(--what-s),var(--when-s));border:1px solid var(--line)}
+.together>.wh{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.together>.wh b{font-size:20px;font-weight:600;letter-spacing:-.02em}
+.together>.wh span{font:500 11px var(--m);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.together .tgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+
+/* lab */
+.lab{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,.7fr);gap:clamp(16px,3vw,40px);align-items:start}
+.track{position:relative;display:grid;grid-template-columns:76px minmax(0,1fr);align-items:center;gap:10px;margin-bottom:10px}
+.track>span{font:500 11px var(--m);color:var(--ink-2)}
+.tbar{position:relative;height:34px;border-radius:8px;background:var(--line);touch-action:none}
+.tbar i{position:absolute;top:0;bottom:0;border-radius:6px}
+.tbar.ref i{background:var(--when)}
+.tbar .pr{background:var(--what);cursor:grab}
+.tbar.ov i{background:repeating-linear-gradient(135deg,var(--what) 0 4px,var(--when) 4px 8px)}
+.tbar .pr.drag{cursor:grabbing}
+.tbar .hd{position:absolute;top:-5px;bottom:-5px;width:14px;margin-left:-7px;border-radius:6px;background:var(--ink);cursor:ew-resize;z-index:2}
+.tbar .hd::after{content:"";position:absolute;left:50%;top:50%;width:2px;height:12px;margin:-6px 0 0 -1px;background:var(--paper);border-radius:1px}
+.tax{display:flex;justify-content:space-between;margin:0 0 14px 86px;font:10.5px var(--m);color:var(--ink-3)}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.presets button{border:1px solid var(--line-2);border-radius:99px;padding:6px 13px;font-size:13px}
+.presets button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.ring{width:100%;max-width:220px;margin-inline:auto;display:block}
+.ring circle{fill:none;stroke-width:8;stroke-linecap:round}
+.ring .bg{stroke:var(--line)}
+.ring .fg{stroke:var(--what);stroke-dasharray:0 999;transition:stroke-dasharray .35s var(--ease)}
+.ring text{fill:var(--ink);font-family:var(--f)}
+.thr{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:12px}
+.thr span{font:600 11px var(--m);padding:4px 10px;border-radius:99px;border:1.5px solid var(--line-2);color:var(--ink-3);transition:all .25s}
+.thr span.y{background:var(--what);border-color:var(--what);color:#fff}
+.vld{text-align:center;margin-top:10px;font-size:13px;color:var(--ok)}.vld.bad{color:var(--bad)}
+/* baselines */
+.bl-g{display:grid;gap:16px}
+.bl-r b{font-weight:500;font-size:14px}
+.bl-r .pair{display:grid;gap:5px;margin-top:6px}
+.bl-r .bar{display:grid;grid-template-columns:minmax(0,1fr) 64px;align-items:center;gap:10px}
+.bl-r .tk{height:10px;border-radius:6px;background:var(--line);overflow:hidden}
+.bl-r .tk i{display:block;height:100%;width:var(--w);border-radius:6px}
+.bl-r .bar span{font:500 12px var(--m);text-align:right}
+.bl-leg{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2);margin-bottom:14px}
+.bl-leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+.ethic{list-style:none;margin:0;padding:0;display:grid}
+.ethic li{padding:11px 0;border-bottom:1px solid var(--line);display:flex;gap:12px;font-size:14.5px}
+.ethic li:last-child{border-bottom:0}
+.ethic li::before{content:"—";color:var(--what);flex:none}
+
+/* quality */
+.db{display:grid;gap:10px}
+.dbr{display:grid;grid-template-columns:84px minmax(0,1fr) 54px;gap:10px;align-items:center;font:500 11px var(--m)}
+.dbt{position:relative;height:14px}
+.dbt::before{content:"";position:absolute;left:0;right:0;top:6px;height:2px;background:var(--line)}
+.dbt .ln{position:absolute;top:6px;height:2px;background:var(--bad)}
+.dbt .p{position:absolute;top:2px;width:10px;height:10px;margin-left:-5px;border-radius:50%}
+.dbt .p.s{background:var(--who)}.dbt .p.m{background:var(--what)}
+.db-leg{display:flex;gap:16px;font-size:12.5px;color:var(--ink-2);margin-bottom:12px}
+.db-leg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+
+/* roadmap */
+.gates{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.gates>div{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--paper);display:flex;flex-direction:column;gap:8px;min-width:0}
+.gates i{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;border:2px dashed var(--ink-3);font:600 11px var(--m);font-style:normal;color:var(--ink-2)}
+.gates p{font-size:13.5px;line-height:1.5;flex:1}
+.gates em{font:500 10.5px var(--m);font-style:normal;letter-spacing:.06em;text-transform:uppercase;color:var(--when-i)}
+.gauges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;text-align:center}
+.gz svg{width:100%;max-width:110px}
+.gz circle{fill:none;stroke-width:9;stroke-linecap:round}
+.gz .bgc{stroke:var(--line)}.gz .tg{stroke:var(--what);stroke-dasharray:calc(var(--p)*314) 999;transform:rotate(-90deg);transform-origin:60px 60px}
+.gz b{display:block;font-size:20px;font-weight:400;margin-top:4px}
+.gz span{font-size:12.5px;color:var(--ink-2)}
+.splitbar{display:flex;height:34px;border-radius:10px;overflow:hidden;margin:8px 0}
+.splitbar i{display:grid;place-items:center;width:var(--w);color:#fff;font-style:normal}
+.splitbar b{font:600 12px var(--m)}
+.splitbar .p1{background:var(--what)}.splitbar .p2{background:var(--who)}.splitbar .p3{background:var(--when)}
+.splitleg{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2)}
+.splitleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+.splitleg .p1{background:var(--what)}.splitleg .p2{background:var(--who)}.splitleg .p3{background:var(--when)}
+.term{background:var(--studio);color:var(--studio-ink);border-radius:16px;padding:16px 20px;min-width:0}
+.term .lbl{color:var(--studio-ink-2);margin-bottom:10px}
+.term pre{margin:0;font:12.5px/1.9 var(--m);overflow-x:auto}
+.term pre i{color:var(--what);font-style:normal;margin-right:8px}
+.term p{font-size:13px;color:var(--studio-ink-2);margin-top:10px}
+.term .chips .chip{background:transparent;color:var(--studio-ink);border-color:var(--studio-line);font-size:12.5px}
+.cur{display:inline-block;width:8px;height:15px;background:var(--what);vertical-align:-2px;animation:cur 1s steps(1) infinite}
+@keyframes cur{50%{opacity:0}}
+.big{font-size:clamp(48px,10vw,150px);font-weight:600;letter-spacing:-.05em;line-height:1.05;text-align:center;padding:clamp(24px,4vw,48px) 0 6px;display:flex;justify-content:center;flex-wrap:wrap;gap:0 .24em}
+.big span:nth-child(1){color:var(--who)}.big span:nth-child(2){color:var(--what)}.big span:nth-child(3){color:var(--when)}
+footer{padding-block:24px 36px;border-top:1px solid var(--line)}
+footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
+.mail{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.mail button{border:1px solid var(--ink);border-radius:99px;padding:6px 14px;font-size:13px}
+
+/* corpus dock: the page is the corpus */
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:65;padding:8px max(14px,env(safe-area-inset-right,0px)) max(10px,env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px));background:color-mix(in srgb,var(--paper) 90%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);transition:transform .45s var(--ease),opacity .45s}
+.dock.away{transform:translateY(110%);opacity:0;pointer-events:none}
+.dock-in{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
+.dock .tc{font:500 12px var(--m);white-space:nowrap}
+.dock .tc b{color:var(--what-i)}
+.dock .tc span{color:var(--ink-3)}
+.dock .hintd{font:11px var(--m);color:var(--ink-3);white-space:nowrap}
+.ribbon{position:relative;height:22px;display:flex;gap:1px;cursor:pointer;touch-action:none}
+.ribbon i{display:block;height:100%;background:var(--c);border-radius:2px;opacity:.55;transition:opacity .2s}
+.ribbon i.rev{background:repeating-linear-gradient(135deg,var(--c) 0 4px,color-mix(in srgb,var(--c) 40%,transparent) 4px 7px)}
+.ribbon i.on{opacity:1}
+.ribbon .ph{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);margin-left:-1px;pointer-events:none;box-shadow:0 0 0 2px color-mix(in srgb,var(--paper) 80%,transparent)}
+.ribbon .tip{position:absolute;bottom:30px;transform:translateX(-50%);font:600 10.5px var(--m);background:var(--ink);color:var(--paper);padding:4px 8px;border-radius:6px;white-space:nowrap;opacity:0;transition:opacity .15s;pointer-events:none}
+.ribbon:hover .tip{opacity:1}
+
+/* pointer: a playhead cursor */
+#cdot{position:fixed;left:0;top:0;z-index:97;pointer-events:none;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--ink);opacity:0;transition:opacity .25s,width .2s var(--ease),height .2s var(--ease),margin .2s var(--ease),background .2s}
+#cdot.on{opacity:1}
+#cdot.hot{width:30px;height:30px;margin:-15px 0 0 -15px;background:color-mix(in srgb,var(--what) 22%,transparent);outline:1.5px solid var(--what)}
+#chair{position:fixed;z-index:96;pointer-events:none;width:2px;margin-left:-1px;background:var(--what);opacity:0;transition:opacity .15s}
+#chair.on{opacity:1}
+#chair b{position:absolute;left:50%;top:-24px;transform:translateX(-50%);background:var(--what);color:#fff;font:600 10.5px/1 var(--m);padding:4px 7px;border-radius:5px;white-space:nowrap}
+.dark-surface #chair{background:#fff}
+#cping{position:fixed;z-index:96;pointer-events:none;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;border:2px solid var(--what);animation:ping .6s var(--ease) forwards}
+@keyframes ping{to{transform:scale(5);opacity:0}}
+
+@media (max-width:1100px){
+  .stats,.fcards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stats>div:not(:nth-child(4n+1)){padding-left:0;border-left:0}
+  .stats>div:nth-child(2n){padding-left:20px;border-left:1px solid var(--line)}
+  .rules,.gates{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .lab,.dgrid{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .meta2,.g2,.wcols,.together .tgrid{grid-template-columns:1fr}
+  .pipe{grid-template-columns:1fr}.pipe .fa{transform:rotate(90deg);padding:4px 0}
+  .io{grid-template-columns:1fr}.io-mid{flex-direction:row;padding:10px 0}
+  .tape{grid-template-columns:1fr}.tape>div{padding:0 0 18px 32px}.tape>div::before{left:9px;top:0;bottom:0;width:3px;height:auto;right:auto}.tape>div i{top:0}
+  .stats b{font-size:30px}
+  .menu-btn span,.dock .hintd{display:none}
+  .st-res{grid-template-columns:1fr}.st-res>div{border-right:0;border-bottom:1px solid var(--studio-line)}.st-res>div:last-child{border-bottom:0}
+  .lane{grid-template-columns:70px minmax(0,1fr)}.daw-ruler{margin-left:70px}.ev-layer,.playhead{left:70px}
+  .gr{grid-template-columns:1fr}
+  .gauges{grid-template-columns:1fr 1fr 1fr}
+  .dock-in{grid-template-columns:auto minmax(0,1fr)}
+  .fcards,.rules,.gates{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  #cdot,#chair,#cping{display:none}
+}
+</style></head><body>
+<header class="top"><div class="in">
+  <button class="menu-btn" id="menuBtn" aria-label="Menu"><i><b></b><b></b></i><span data-k="ui.menu"></span></button>
+  <a class="word" href="#hero" aria-label="Who What When"><b>WHO</b><b>WHAT</b><b>WHEN</b></a>
+  <span class="sp"></span>
+  <div class="langs" role="group" aria-label="Language"><button data-l="zh" aria-pressed="true">中文</button><button data-l="en" aria-pressed="false">EN</button></div>
+</div><div class="prog" id="prog"></div></header>
+
+<nav class="rail" id="rail" aria-label="Chapters"><ol id="railList"></ol><span class="dot" id="railDot"></span></nav>
+<div class="menu" id="menu" aria-hidden="true"><div class="mh"><span class="word"><b>WHO</b><b>WHAT</b><b>WHEN</b></span><button id="menuX" data-k="ui.close"></button></div><ol id="menuList"></ol></div>
+
+<main class="sheet" id="top">
+
+<!-- hero: annotation studio -->
+<section class="studio" id="hero" data-nav="nav.hero">
+  <div class="st-wrap">
+    <span class="st-k" data-k="hs.k"></span>
+    <h1 class="st-title"><span class="w1" data-k="hs.who"></span><span class="w2" data-k="hs.what"></span><span class="w3" data-k="hs.when"></span></h1>
+    <div class="st-q"><span class="lbl" style="color:var(--studio-ink-2)" data-k="hs.q"></span><p id="stQ"></p></div>
+    <div class="daw" id="daw" aria-label="Annotation timeline">
+      <div class="daw-ruler" id="ruler"></div>
+      <div id="lanes"></div>
+      <div class="ev-layer" id="evLayer"></div>
+      <div class="playhead" id="ph"><i></i><b id="phT">0:00</b></div>
+    </div>
+    <div class="st-res">
+      <div class="rw"><span class="lbl" data-k="hs.who"></span><b id="rWho"></b><span class="live" id="lWho"></span></div>
+      <div class="rn"><span class="lbl" data-k="hs.what"></span><b data-k="hs.whatv"></b><span class="live" data-k="hs.whatl"></span></div>
+      <div class="rh"><span class="lbl" data-k="hs.when"></span><b id="rWhen"></b><span class="live" id="lWhen"></span></div>
+    </div>
+    <div class="st-ctl"><div class="st-chips" id="chips"></div><button class="st-play" id="play"></button></div>
+    <p class="st-hint" data-k="hs.hint"></p>
+  </div>
+</section>
+
+<!-- overview -->
+<section class="ch intro" id="c-overview" data-nav="nav.ov"><div class="wrap">
+  <div class="head"><div class="row"><span class="no">01</span><span class="lbl" data-k="nav.ov"></span><span class="wtag"><i class="who on"></i><i class="what on"></i><i class="when on"></i></span></div>
+    <h1 data-k="hero.title"></h1><p class="lede" data-k="hero.sub"></p></div>
+  <div class="meta2">
+    <div><span class="lbl" data-k="meta.role.k"></span><p data-k="meta.role.v"></p></div>
+    <div><span class="lbl" data-k="meta.task.k"></span><p data-k="meta.task.v"></p></div>
+    <div><span class="lbl" data-k="meta.data.k"></span><p data-k="meta.data.v"></p></div>
+    <div><span class="lbl" data-k="meta.st.k"></span><p data-k="meta.st.v"></p></div>
+  </div>
+  <div class="stats">
+    <div><b class="num" data-c="25">25</b><p data-k="ov.n1"></p></div>
+    <div><b class="num" data-c="5">5</b><p data-k="ov.n2"></p></div>
+    <div><b class="num" data-c="178">178</b><p data-k="ov.n3"></p></div>
+    <div><b class="num" data-c="18">18</b><p data-k="ov.n4"></p></div>
+  </div>
+</div></section>
+
+<!-- why -->
+<section class="ch alt" id="c-why" data-nav="nav.wh"><div class="wrap">
+  <div class="head"><div class="row"><span class="no">02</span><span class="lbl" data-k="wh.label"></span></div><h2 data-k="wh.title"></h2><p class="lede" data-k="wh.lede"></p></div>
+  <span class="lbl k" data-k="wh.flow.k"></span>
+  <div class="pipe">
+    <div class="fn"><i>1</i><b data-k="wh.f1.t"></b><p data-k="wh.f1.d"></p></div><i class="fa">→</i>
+    <div class="fn"><i>2</i><b data-k="wh.f2.t"></b><p data-k="wh.f2.d"></p></div><i class="fa">→</i>
+    <div class="fn"><i>3</i><b data-k="wh.f3.t"></b><p data-k="wh.f3.d"></p></div>
+  </div>
+  <p class="muted small" style="margin:10px 0 22px" data-k="wh.f.note"></p>
+  <div class="fcards">
+    <div class="fc"><svg viewBox="0 0 200 56" aria-hidden="true"><rect x="0" y="8" width="90" height="16" rx="5" fill="var(--who)"/><rect x="96" y="8" width="104" height="16" rx="5" fill="var(--what)" opacity=".35"/><rect x="0" y="32" width="60" height="16" rx="5" fill="var(--what)" opacity=".35"/><rect x="66" y="32" width="134" height="16" rx="5" fill="var(--who)"/><path d="M92 26l8 4" stroke="var(--bad)" stroke-width="2.5" stroke-linecap="round"/></svg><span class="fi">W1</span><h3 data-k="wh.c1.t"></h3><p data-k="wh.c1.d"></p><small data-k="wh.c1.k"></small><em data-k="wh.c1.u"></em></div>
+    <div class="fc"><svg viewBox="0 0 200 56" aria-hidden="true"><text x="0" y="22" font-size="14" fill="var(--what)" font-weight="600">is</text><text x="26" y="22" font-size="14" fill="var(--ink-3)">→</text><text x="52" y="22" font-size="14" fill="var(--bad)" font-weight="600" text-decoration="line-through">is not</text><rect x="0" y="34" width="200" height="4" rx="2" fill="var(--line-2)"/><rect x="0" y="34" width="110" height="4" rx="2" fill="var(--what)"/></svg><span class="fi">W2</span><h3 data-k="wh.c2.t"></h3><p data-k="wh.c2.d"></p><small data-k="wh.c2.k"></small><em data-k="wh.c2.u"></em></div>
+    <div class="fc"><svg viewBox="0 0 200 56" aria-hidden="true"><rect x="0" y="20" width="200" height="16" rx="5" fill="var(--line)"/><rect x="24" y="20" width="50" height="16" rx="5" fill="var(--when)"/><path d="M150 8v40" stroke="var(--bad)" stroke-width="2.5" stroke-dasharray="4 3"/><circle cx="150" cy="8" r="4" fill="var(--bad)"/></svg><span class="fi">W3</span><h3 data-k="wh.c3.t"></h3><p data-k="wh.c3.d"></p><small data-k="wh.c3.k"></small><em data-k="wh.c3.u"></em></div>
+    <div class="fc"><svg viewBox="0 0 200 56" aria-hidden="true"><path d="M0 28 Q12 4 24 28 T48 28 T72 28 T96 28 T120 28 T144 28 T168 28 T192 28" fill="none" stroke="var(--ink-3)" stroke-width="2"/><rect x="132" y="16" width="64" height="24" rx="12" fill="none" stroke="var(--bad)" stroke-width="2" stroke-dasharray="4 3"/><text x="164" y="29" font-size="11" fill="var(--bad)" text-anchor="middle" dominant-baseline="central">sad?</text></svg><span class="fi">W4</span><h3 data-k="wh.c4.t"></h3><p data-k="wh.c4.d"></p><small data-k="wh.c4.k"></small><em data-k="wh.c4.u"></em></div>
+  </div>
+</div></section>
+
+<!-- task -->
+<section class="ch" id="c-task" data-nav="nav.tk"><div class="wrap">
+  <div class="head"><div class="row"><span class="no">03</span><span class="lbl" data-k="tk.label"></span></div><h2 data-k="tk.title"></h2><p class="lede" data-k="tk.lede"></p></div>
+  <div class="io">
+    <div class="io-box"><span class="lbl" data-k="tk.in.k"></span><ul><li data-k="tk.in1"></li><li data-k="tk.in2"></li><li data-k="tk.in3"></li><li data-k="tk.in4"></li></ul></div>
+    <div class="io-mid"><b data-k="tk.model"></b><span class="wire"><i></i><i></i><i></i></span></div>
+    <div class="io-box out"><span class="lbl" data-k="tk.out.k"></span><ul><li data-k="tk.out1"></li><li data-k="tk.out2"></li><li data-k="tk.out3"></li></ul></div>
+  </div>
+  <div class="blk"><span class="lbl k" data-k="tk.json.k"></span>
+<pre class="code"><code><span class="c-p">{</span>
+  <span class="c-k">"id"</span>: <span class="c-s">"wsw_0018"</span>,
+  <span class="c-k">"speaker_id"</span>: <span class="c-s">"spk_02"</span>,
+  <span class="c-k">"evidence_ms"</span>: <span class="c-p">[[</span><span class="c-n">10000</span>, <span class="c-n">26000</span><span class="c-p">], [</span><span class="c-n">27000</span>, <span class="c-n">59000</span><span class="c-p">]]</span>,
+  <span class="c-k">"answer"</span>: <span class="c-s">"A situation cannot be changed and must be accepted. A problem has a solution…"</span>
+<span class="c-p">}</span></code></pre></div>
+  <div class="blk"><span class="lbl k" data-k="tk.cond.k"></span>
+  <div class="tw"><table>
+    <thead><tr><th data-k="tk.cond.h0"></th><th data-k="tk.cond.h1"></th><th data-k="tk.cond.h2"></th><th data-k="tk.cond.h3"></th><th data-k="tk.cond.h4"></th><th data-k="tk.cond.h5"></th></tr></thead>
+    <tbody>
+      <tr><td data-k="tk.cd1.n"></td><td class="y"><i></i></td><td></td><td class="y"><i></i></td><td></td><td data-k="tk.cd1.p"></td></tr>
+      <tr><td data-k="tk.cd2.n"></td><td></td><td class="y"><i></i></td><td class="y"><i></i></td><td></td><td data-k="tk.cd2.p"></td></tr>
+      <tr><td data-k="tk.cd3.n"></td><td></td><td></td><td class="y"><i></i></td><td></td><td data-k="tk.cd3.p"></td></tr>
+      <tr><td data-k="tk.cd4.n"></td><td class="y"><i></i></td><td></td><td class="y"><i></i></td><td class="y"><i></i></td><td data-k="tk.cd4.p"></td></tr>
+      <tr><td data-k="tk.cd5.n"></td><td class="y"><i></i></td><td></td><td class="y"><i></i></td><td></td><td data-k="tk.cd5.p"></td></tr>
+    </tbody></table></div></div>
+</div></section>
+
+<!-- data -->
+<section class="ch alt" id="c-data" data-nav="nav.da"><div class="wrap">
+  <div class="head"><div class="row"><span class="no">04</span><span class="lbl" data-k="da.label"></span></div><h2 data-k="da.title"></h2><p class="lede" data-k="da.lede"></p></div>
+  <div class="card"><span class="lbl k" data-k="da.bc.k"></span><div class="gantt" id="gantt"></div>
+    <div class="gleg"><span id="gleg" style="display:contents"></span><span><i class="h"></i><em style="font-style:normal" data-k="da.bc.leg"></em></span></div></div>
+  <div class="dgrid">
+    <div class="card"><span class="lbl k" data-k="da.st.k"></span>
+      <div class="donut-wrap"><div class="donut"><b class="num">18<small>/25</small></b></div>
+        <ul class="dl2"><li><i></i><span data-k="da.st1"></span><b>18</b></li><li><i class="d2"></i><span data-k="da.st2"></span><b>7</b></li></ul></div>
+      <span class="lbl k" style="margin-top:20px" data-k="da.cat.k"></span>
+      <div class="stack"><i style="--w:92%" class="s1"></i><i style="--w:8%" class="s2"></i></div>
+      <ul class="dl2"><li><i></i><span data-k="da.cat1"></span><b>23</b></li><li><i class="d2"></i><span data-k="da.cat2"></span><b>2</b></li></ul>
+      <span class="lbl k" style="margin-top:20px" data-k="da.spk.k"></span>
+      <div class="stack"><i style="--w:92%" class="s1"></i><i style="--w:8%" class="s2"></i></div>
+      <ul class="dl2"><li><i></i><span data-k="da.spk1"></span><b>23</b></li><li><i class="d2"></i><span data-k="da.spk2"></span><b>2</b></li></ul>
+    </div>
+    <div style="display:grid;gap:14px;align-content:start">
+      <div class="card multi"><b class="num" data-c="4">4</b><p data-k="da.multi.d"></p><div class="mini-ev" aria-hidden="true"><i style="left:4%;width:22%"></i><i style="left:60%;width:30%"></i></div></div>
+      <div class="card"><span class="lbl k" data-k="da.topics.k"></span><div class="chips"><span class="chip" data-k="da.t1"></span><span class="chip" data-k="da.t2"></span><span class="chip" data-k="da.t3"></span><span class="chip" data-k="da.t4"></span><span class="chip" data-k="da.t5"></span></div></div>
+    </div>
+  </div>
+</div></section>
+
+<!-- annotation -->
+<section class="ch" id="c-annotation" data-nav="nav.an"><div class="wrap">
+  <div class="head"><div class="row"><span class="no">05</span><span class="lbl" data-k="an.label"></span></div><h2 data-k="an.title"></h2><p class="lede" data-k="an.lede"></p></div>
+  <div class="tape">
+    <div class="done"><i></i><b data-k="an.s1.t"></b><em data-k="an.done"></em><p data-k="an.s1.d"></p></div>
+    <div class="done"><i></i><b data-k="an.s2.t"></b><em data-k="an.done"></em><p data-k="an.s2.d"></p></div>
+    <div><i></i><b data-k="an.s3.t"></b><em data-k="an.plan"></em><p data-k="an.s3.d"></p></div>
+    <div><i></i><b data-k="an.s4.t"></b><em data-k="an.plan"></em><p data-k="an.s4.d"></p></div>
+    <div><i></i><b data-k="an.s5.t"></b><em data-k="an.plan"></em><p data-k="an.s5.d"></p></div>
+  </div>
+  <div class="blk"><span class="lbl k" data-k="an.r.k"></span>
+  <div class="rules">
+    <div><code>[start_ms, end_ms)</code><b data-k="an.r1.t"></b><p data-k="an.r1.d"></p></div>
+    <div><code>spk_01</code><b data-k="an.r2.t"></b><p data-k="an.r2.d"></p></div>
+    <div><code>question</code><b data-k="an.r3.t"></b><p data-k="an.r3.d"></p></div>
+    <div><code>evidence</code><b data-k="an.r4.t"></b><p data-k="an.r4.d"></p></div>
+  </div></div>
+  <div class="blk"><span class="lbl k" data-k="an.e.k"></span>
+  <div class="errs"><span data-k="an.e1"></span><span data-k="an.e2"></span><span data-k="an.e3"></span><span data-k="an.e4"></span></div>
+  <p class="muted small" style="margin-top:14px" data-k="an.cal"></p></div>
+</div></section>
+
+<!-- scoring -->
+<section class="ch alt" id="c-scoring" data-nav="nav.sc"><div class="wrap">
+  <div class="head"><div class="row"><span class="no">06</span><span class="lbl" data-k="sc.label"></span></div><h2 data-k="sc.title"></h2><p class="lede" data-k="sc.lede"></p></div>
+  <div class="wcols">
+    <div class="wc who"><div class="wh"><b data-k="hs.who"></b><span data-k="sc.who.s"></span></div>
+      <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m1.t"></b><p data-k="sc.m1.d"></p></div>
+      <div class="mc"><span class="tg" data-k="sc.opt"></span><b data-k="sc.m7.t"></b><p data-k="sc.m7.d"></p></div></div>
+    <div class="wc what"><div class="wh"><b data-k="hs.what"></b><span data-k="sc.what.s"></span></div>
+      <div class="mc"><span class="tg h" data-k="sc.human"></span><b data-k="sc.m5.t"></b><p data-k="sc.m5.d"></p></div></div>
+    <div class="wc when"><div class="wh"><b data-k="hs.when"></b><span data-k="sc.when.s"></span></div>
+      <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m2.t"></b><p data-k="sc.m2.d"></p></div>
+      <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m3.t"></b><p data-k="sc.m3.d"></p></div></div>
+  </div>
+  <div class="together"><div class="wh"><b data-k="sc.joint"></b><span data-k="sc.joint.s"></span></div>
+    <div class="tgrid">
+      <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m4.t"></b><p data-k="sc.m4.d"></p></div>
+      <div class="mc"><span class="tg h" data-k="sc.both"></span><b data-k="sc.m6.t"></b><p data-k="sc.m6.d"></p></div>
+      <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m8.t"></b><p data-k="sc.m8.d"></p></div>
+    </div></div>
+
+  <div class="blk"><div class="card"><span class="lbl k" data-k="lab.k"></span>
+    <p class="muted small" style="margin-bottom:14px" data-k="lab.lede"></p>
+    <div class="lab">
+      <div>
+        <div class="tax" id="tax"></div>
+        <div class="track"><span data-k="lab.ref"></span><div class="tbar ref" id="refBar"></div></div>
+        <div class="track"><span data-k="lab.pred"></span><div class="tbar" id="predBar"><b class="hd" id="hdS" tabindex="0" role="slider" aria-label="Start"></b><b class="hd" id="hdE" tabindex="0" role="slider" aria-label="End"></b></div></div>
+        <div class="track"><span data-k="lab.over"></span><div class="tbar ov" id="ovBar"></div></div>
+        <div class="presets" id="presets"></div>
+        <p class="muted small" data-k="lab.note"></p>
+        <p class="muted small" style="margin-top:6px" data-k="lab.ex"></p>
+      </div>
+      <div>
+        <svg class="ring" viewBox="0 0 140 140" aria-hidden="true"><circle class="bg" cx="70" cy="70" r="58"/><circle class="fg" id="ringFg" cx="70" cy="70" r="58" transform="rotate(-90 70 70)"/><text id="ringT" x="70" y="74" text-anchor="middle" font-size="30" font-weight="300">0.000</text><text x="70" y="96" text-anchor="middle" font-size="11" fill="var(--ink-3)">tIoU</text></svg>
+        <div class="thr" id="thr"><span data-t=".3">≥0.3</span><span data-t=".5">≥0.5</span><span data-t=".7">≥0.7</span></div>
+        <p class="vld" id="vld"></p>
+      </div>
+    </div></div></div>
+
+  <div class="g2 blk" style="align-items:start">
+    <div class="card"><span class="lbl k" data-k="bl.k"></span><p class="muted small" style="margin-bottom:12px" data-k="bl.lede"></p>
+      <div class="bl-leg"><span><i style="background:var(--who)"></i><span data-k="bl.b1"></span></span><span><i style="background:var(--when)"></i><span data-k="bl.b2"></span></span></div>
+      <div class="bl-g" id="bl"></div></div>
+    <div class="card"><ul class="ethic"><li data-k="bl.n1"></li><li data-k="bl.n2"></li><li data-k="bl.n3"></li></ul></div>
+  </div>
+</div></section>
+
+<!-- quality -->
+<section class="ch" id="c-quality" data-nav="nav.ql"><div class="wrap">
+  <div class="head"><div class="row"><span class="no">07</span><span class="lbl" data-k="ql.label"></span></div><h2 data-k="ql.title"></h2><p class="lede" data-k="ql.lede"></p></div>
+  <div class="stats" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+    <div><b class="num" data-c="13">13</b><p data-k="ql.n1"></p></div>
+    <div><b class="num" data-c="7">7</b><p data-k="ql.n2"></p></div>
+    <div><b class="num" data-c="18">18</b><p data-k="ql.n3"></p></div>
+  </div>
+  <div class="g2 blk" style="align-items:start">
+    <div class="card"><span class="lbl k" data-k="ql.dc.k"></span>
+      <div class="db-leg"><span><i style="background:var(--who)"></i><span data-k="ql.dc.l1"></span></span><span><i style="background:var(--what)"></i><span data-k="ql.dc.l2"></span></span></div>
+      <div class="db" id="db"></div><p class="muted small" style="margin-top:14px" data-k="ql.dc.note"></p></div>
+    <div class="card"><span class="lbl k" data-k="ql.f.k"></span><ul class="ethic"><li data-k="ql.f1"></li><li data-k="ql.f2"></li><li data-k="ql.f3"></li><li data-k="ql.f4"></li></ul></div>
+  </div>
+</div></section>
+
+<!-- roadmap -->
+<section class="ch alt" id="c-roadmap" data-nav="nav.rm"><div class="wrap">
+  <div class="head"><div class="row"><span class="no">08</span><span class="lbl" data-k="rm.label"></span></div><h2 data-k="rm.title"></h2></div>
+  <span class="lbl k" data-k="rm.g.k"></span>
+  <div class="gates">
+    <div><i>1</i><p data-k="rm.g1"></p><em data-k="rm.open"></em></div>
+    <div><i>2</i><p data-k="rm.g2"></p><em data-k="rm.open"></em></div>
+    <div><i>3</i><p data-k="rm.g3"></p><em data-k="rm.open"></em></div>
+    <div><i>4</i><p data-k="rm.g4"></p><em data-k="rm.open"></em></div>
+    <div><i>5</i><p data-k="rm.g5"></p><em data-k="rm.open"></em></div>
+  </div>
+  <div class="g2 blk" style="align-items:start">
+    <div class="card"><span class="lbl k" data-k="rm.th.k"></span>
+      <div class="gauges">
+        <div class="gz"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="bgc" cx="60" cy="60" r="50"/><circle class="tg" cx="60" cy="60" r="50" style="--p:.95"/></svg><b>≥ 95%</b><span data-k="rm.th1"></span></div>
+        <div class="gz"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="bgc" cx="60" cy="60" r="50"/><circle class="tg" cx="60" cy="60" r="50" style="--p:.8"/></svg><b>≥ 0.80</b><span data-k="rm.th2"></span></div>
+        <div class="gz"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="bgc" cx="60" cy="60" r="50"/><circle class="tg" cx="60" cy="60" r="50" style="--p:.9"/></svg><b>≥ 90%</b><span data-k="rm.th3"></span></div>
+      </div></div>
+    <div class="card"><span class="lbl k" data-k="rm.sp.k"></span>
+      <div class="splitbar"><i class="p1" style="--w:70%"><b>70%</b></i><i class="p2" style="--w:15%"><b>15%</b></i><i class="p3" style="--w:15%"><b>15%</b></i></div>
+      <div class="splitleg"><span><i class="p1"></i><span data-k="rm.sp1"></span></span><span><i class="p2"></i><span data-k="rm.sp2"></span></span><span><i class="p3"></i><span data-k="rm.sp3"></span></span></div>
+      <p class="muted small" style="margin-top:12px" data-k="rm.sp.note"></p></div>
+  </div>
+  <div class="g2 blk" style="align-items:start">
+    <div class="term"><span class="lbl" data-k="rm.run.k"></span>
+<pre><code><span><i>$</i>python3 -m wsw.validate</span>
+<span><i>$</i>python3 -m unittest discover -s tests -v</span>
+<span><i>$</i>python3 -m wsw.score examples/whole_clip.jsonl</span>
+<span><i>$</i>python3 -m wsw.score examples/middle_20pct.jsonl <b class="cur"></b></span></code></pre>
+      <p data-k="rm.run.note"></p>
+      <div class="chips" style="margin-top:12px"><span class="chip" data-k="rm.f1"></span><span class="chip" data-k="rm.f2"></span><span class="chip" data-k="rm.f3"></span></div></div>
+    <div class="card"><span class="lbl k" data-k="rm.lim.k"></span><ul class="ethic"><li data-k="rm.l1"></li><li data-k="rm.l2"></li><li data-k="rm.l3"></li></ul></div>
+  </div>
+  <div class="big" aria-hidden="true"><span>Who</span><span>What</span><span>When</span></div>
+</div></section>
+
+<footer><div class="wrap in">
+  <strong data-k="ft.name"></strong>
+  <div class="mail"><span id="mail" class="small">katherinelin0292@gmail.com</span><button id="copy" data-k="ft.copy"></button></div>
+</div></footer>
+</main>
+
+<div class="dock" id="dock"><div class="dock-in">
+  <div class="tc"><b id="dkT">0:00</b> <span>/ 94:47</span> · <span id="dkC">v1-1</span></div>
+  <div class="ribbon" id="ribbon" role="slider" aria-label="Corpus timeline"><span class="ph" id="dkPh"></span><span class="tip" id="dkTip"></span></div>
+  <div class="hintd" data-k="dock.hint"></div>
+</div></div>
+<div id="cdot"></div><div id="chair"><b id="chT"></b></div>
+
+<script>const DATA={"clips":[{"id":"v1-1","src":0,"dur":254145,"status":"needs_media_review","spk":3,"turns":12},{"id":"v1-2","src":0,"dur":298083,"status":"needs_media_review","spk":3,"turns":7},{"id":"v2-1","src":1,"dur":190015,"status":"text_aligned","spk":2,"turns":9},{"id":"v2-2","src":1,"dur":256026,"status":"text_aligned","spk":2,"turns":5},{"id":"v2-3","src":1,"dur":234031,"status":"text_aligned","spk":2,"turns":6},{"id":"v2-4","src":1,"dur":217025,"status":"text_aligned","spk":2,"turns":9},{"id":"v2-5","src":1,"dur":240013,"status":"text_aligned","spk":2,"turns":8},{"id":"v3-1","src":2,"dur":205035,"status":"text_aligned","spk":2,"turns":7},{"id":"v3-2","src":2,"dur":193019,"status":"needs_media_review","spk":2,"turns":6},{"id":"v3-3","src":2,"dur":180010,"status":"needs_media_review","spk":2,"turns":6},{"id":"v3-4","src":2,"dur":181029,"status":"text_aligned","spk":2,"turns":6},{"id":"v3-5","src":2,"dur":200020,"status":"text_aligned","spk":2,"turns":6},{"id":"v4-1","src":3,"dur":185025,"status":"text_aligned","spk":2,"turns":10},{"id":"v4-2","src":3,"dur":190015,"status":"text_aligned","spk":2,"turns":7},{"id":"v4-3","src":3,"dur":221022,"status":"needs_media_review","spk":2,"turns":8},{"id":"v4-4","src":3,"dur":277029,"status":"text_aligned","spk":2,"turns":4},{"id":"v4-5","src":3,"dur":270028,"status":"text_aligned","spk":2,"turns":6},{"id":"v5-1","src":4,"dur":239020,"status":"needs_media_review","spk":2,"turns":6},{"id":"v5-2","src":4,"dur":210024,"status":"text_aligned","spk":2,"turns":8},{"id":"v5-3","src":4,"dur":283011,"status":"text_aligned","spk":2,"turns":4},{"id":"v5-4","src":4,"dur":212036,"status":"text_aligned","spk":2,"turns":6},{"id":"v5-5","src":4,"dur":208013,"status":"text_aligned","spk":2,"turns":8},{"id":"v5-6","src":4,"dur":230034,"status":"text_aligned","spk":2,"turns":8},{"id":"v5-7","src":4,"dur":291030,"status":"text_aligned","spk":2,"turns":6},{"id":"v5-8","src":4,"dur":222015,"status":"needs_media_review","spk":2,"turns":10}],"demo":[{"id":"wsw_0018","label":"two_close","clip":"v5-2","q":"Who distinguished a situation from a problem, and what should one do about each? Give the supporting segments.","dur":210024,"spk":2,"ev":[[10000,26000],[27000,59000]],"tids":[2,4],"turns":[{"id":1,"spk":1,"s":0,"e":10000},{"id":2,"spk":2,"s":10000,"e":26000},{"id":3,"spk":1,"s":26000,"e":27000},{"id":4,"spk":2,"s":27000,"e":59000},{"id":5,"spk":1,"s":59000,"e":77000},{"id":6,"spk":2,"s":77000,"e":131000},{"id":7,"spk":1,"s":131000,"e":180000},{"id":8,"spk":2,"s":180000,"e":210000}],"nspk":2},{"id":"wsw_0014","label":"two_far","clip":"v4-2","q":"Who explained how exposing a social script changes perception and what comes next in the model? Give the two supporting segments.","dur":190015,"spk":1,"ev":[[0,48000],[136000,190000]],"tids":[1,7],"turns":[{"id":1,"spk":1,"s":0,"e":48000},{"id":2,"spk":2,"s":48000,"e":66000},{"id":3,"spk":1,"s":66000,"e":83000},{"id":4,"spk":2,"s":83000,"e":98000},{"id":5,"spk":1,"s":98000,"e":120000},{"id":6,"spk":2,"s":120000,"e":136000},{"id":7,"spk":1,"s":136000,"e":190000}],"nspk":2},{"id":"wsw_0001","label":"three","clip":"v1-1","q":"Who argued that sharing food can help people overcome fear of one another, and how? When was this said?","dur":254145,"spk":2,"ev":[[219000,242000]],"tids":[10],"turns":[{"id":1,"spk":1,"s":0,"e":10000},{"id":2,"spk":2,"s":10000,"e":38000},{"id":3,"spk":3,"s":39000,"e":54000},{"id":4,"spk":1,"s":55000,"e":66000},{"id":5,"spk":2,"s":67000,"e":105000},{"id":6,"spk":3,"s":106000,"e":155000},{"id":7,"spk":1,"s":156000,"e":172000},{"id":8,"spk":2,"s":173000,"e":205000},{"id":9,"spk":1,"s":206000,"e":218000},{"id":10,"spk":2,"s":219000,"e":242000},{"id":11,"spk":3,"s":243000,"e":250000},{"id":12,"spk":1,"s":251000,"e":254000}],"nspk":3},{"id":"wsw_0020","label":"long","clip":"v5-4","q":"Who discussed waiting for outside approval, and what did they say it accomplishes and suggest doing instead? When was this said?","dur":212036,"spk":2,"ev":[[25000,108000]],"tids":[2,3],"turns":[{"id":1,"spk":1,"s":0,"e":25000},{"id":2,"spk":2,"s":25000,"e":67000},{"id":3,"spk":2,"s":67000,"e":108000},{"id":4,"spk":1,"s":108000,"e":112000},{"id":5,"spk":2,"s":112000,"e":190000},{"id":6,"spk":1,"s":190000,"e":212000}],"nspk":2}]};
+const COPY={"nav.ov": ["概览", "Overview"], "nav.wh": ["为什么重要", "Why it matters"], "nav.tk": ["任务", "Task"], "nav.da": ["数据", "Data"], "nav.an": ["标注", "Annotation"], "nav.sc": ["评分", "Scoring"], "nav.ql": ["数据质量", "Data quality"], "nav.rm": ["路线", "Roadmap"], "hs.k": ["音频对话基准 · v0.1.0-pilot", "Audio dialogue benchmark · v0.1.0-pilot"], "hs.who": ["谁", "Who"], "hs.what": ["说了什么", "What"], "hs.when": ["何时", "When"], "hs.hint": ["选一道题。问题是模型的输入，高亮的时间段是模型要找到的证据。", "Pick an item. The question is the input. The highlighted intervals are the evidence a model must find."], "hs.q": ["问题", "Question"], "hs.spk": ["目标说话人", "Target speaker"], "hs.ev": ["证据", "Evidence"], "hs.int1": ["个时间段", "interval"], "hs.intn": ["个时间段", "intervals"], "hs.l1": ["两段相邻证据", "Two close intervals"], "hs.l2": ["两段相隔较远的证据", "Two distant intervals"], "hs.l3": ["三位说话人", "Three speakers"], "hs.l4": ["一段长证据", "One long interval"], "hero.title": ["谁在什么时候说了什么：音频对话评测基准", "Who said what, and when: a benchmark for audio dialogue"], "hero.sub": ["给定一段访谈音频和一个问题，模型要给出说话人、答案，以及支撑答案的时间段。", "Given an interview clip and a question, a model returns the speaker, the answer and the time intervals that support it."], "meta.role.k": ["角色", "Role"], "meta.role.v": ["标注、评测协议与工具：标注手册、数据说明、转换与评分代码、试点数据集。", "Annotation, benchmark protocol and evaluation tooling: handbook, data card, conversion and scoring code, pilot dataset."], "meta.task.k": ["评测能力", "Measures"], "meta.task.v": ["从音频中判断说话人归属、理解内容、定位时间。", "Speaker attribution, comprehension and temporal grounding from audio."], "meta.data.k": ["数据", "Data"], "meta.data.v": ["25 段英文访谈音频，来自 5 个源视频，共约 94 分 47 秒，标注了 178 个发言轮次。", "25 English interview clips from 5 source videos, about 94 min 47 s, with 178 annotated turns."], "meta.st.k": ["状态", "Status"], "meta.st.v": ["0.1.0-pilot。独立听音复核和留出测试集在计划中。", "0.1.0-pilot. Independent listening review and a held-out test set are planned."], "ov.n1": ["道带证据时间段的题目", "questions with evidence intervals"], "ov.n2": ["个源视频", "source videos"], "ov.n3": ["个标注的发言轮次", "annotated turns"], "ov.n4": ["道默认计分的题（文本已对齐）", "items in the default scoring (text aligned)"], "wh.label": ["为什么重要", "Why it matters"], "wh.title": ["流畅的输出，仍可能在好几处出错", "Fluent output can still be wrong in several ways"], "wh.lede": ["会议纪要读起来通顺，也可能把观点记到别人名下，或把时间戳指向错的位置。这个基准把每一种错误分开计分。", "A meeting summary can read well and still credit a claim to the wrong person or point to the wrong moment. The benchmark scores each failure separately."], "wh.flow.k": ["现有流程中的三个环节", "Three stages in a typical pipeline"], "wh.f1.t": ["语音识别", "Speech recognition"], "wh.f1.d": ["给出文字", "Supplies the words"], "wh.f2.t": ["说话人分离", "Diarization"], "wh.f2.d": ["跟踪说话人切换", "Tracks speaker changes"], "wh.f3.t": ["问答与总结", "Question answering"], "wh.f3.d": ["概括含义", "Summarises meaning"], "wh.f.note": ["多数应用三者都需要。基准评测的是三者合在一起的结果。", "Most applications need all three. The benchmark scores their combined result."], "wh.c1.t": ["说话人错了", "Wrong speaker"], "wh.c1.d": ["主持人的转述被记到嘉宾名下。", "A host's paraphrase is credited to the guest."], "wh.c1.k": ["检查：说话人分配；提问、引用和断言的区别", "Check: speaker assignment; questions vs quotations vs assertions"], "wh.c1.u": ["用于：访谈索引、带出处的会议纪要", "For: interview indexes, source-linked meeting notes"], "wh.c2.t": ["含义被反转", "Reversed meaning"], "wh.c2.d": ["总结漏掉了否定，或颠倒了限定条件。", "A summary drops a negation or flips a qualification."], "wh.c2.k": ["检查：要点、因果方向、条件", "Check: key points, causal direction, conditions"], "wh.c2.u": ["用于：助手评测、质量保证", "For: assistant evaluation, quality assurance"], "wh.c3.t": ["时间戳无法核对", "Unverifiable timestamp"], "wh.c3.d": ["答案指向的那一段并不支持它。", "The answer points to a passage that does not support it."], "wh.c3.k": ["检查：最短的支撑时间段；是否漏掉必要的发言轮次", "Check: shortest supporting intervals; missed necessary turns"], "wh.c3.u": ["用于：音频检索、播放定位", "For: audio retrieval, playback navigation"], "wh.c4.t": ["把语气当成事实", "Delivery mistaken for fact"], "wh.c4.d": ["语气线索被当作身份或内心情绪。", "A tone cue is read as identity or inner emotion."], "wh.c4.k": ["检查：可听见的特征与姓名、角色分开记录", "Check: audible traits recorded apart from names and roles"], "wh.c4.u": ["用于：音频理解诊断", "For: audio comprehension diagnostics"], "tk.label": ["任务", "Task"], "tk.title": ["一个问题，三项答案要核对", "One question, three answers to check"], "tk.lede": ["模型拿到音频和问题，返回片段内的说话人编号、自由文本答案，以及一个或多个证据时间段。一个答案可能需要不连续的多个时间段。", "The model receives the audio and a question. It returns a clip-local speaker ID, a free-text answer and one or more evidence intervals. One answer can need several noncontiguous intervals."], "tk.in.k": ["输入", "Input"], "tk.in1": ["音频片段", "Audio clip"], "tk.in2": ["问题（不含答案）", "Question, answer withheld"], "tk.in3": ["片段时长", "Clip duration"], "tk.in4": ["说话人编号规则", "Speaker numbering rule"], "tk.model": ["模型", "Model"], "tk.out.k": ["输出", "Output"], "tk.out1": ["说话人编号", "Speaker ID"], "tk.out2": ["文字答案", "Free-text answer"], "tk.out3": ["证据时间段", "Evidence intervals"], "tk.json.k": ["预测示例（其中一题，含两个证据时间段）", "Example prediction, with two evidence intervals"], "tk.cond.k": ["五种输入条件", "Five input conditions"], "tk.cond.h0": ["条件", "Condition"], "tk.cond.h1": ["音频", "Audio"], "tk.cond.h2": ["转写", "ASR text"], "tk.cond.h3": ["问题", "Question"], "tk.cond.h4": ["名单", "Roster"], "tk.cond.h5": ["目的", "Purpose"], "tk.cd1.n": ["纯音频主赛道", "Audio-only main track"], "tk.cd1.p": ["评测靠可听证据做出的归属、理解和定位", "Attribution, meaning and timing from audible evidence"], "tk.cd2.n": ["转写对照", "ASR control"], "tk.cd2.p": ["文字输入下的表现", "Performance with text input"], "tk.cd3.n": ["仅问题对照", "Question-only control"], "tk.cd3.p": ["不听音频，模型能从问题推测多少", "What models infer without hearing"], "tk.cd4.n": ["身份扩展", "Identity extension"], "tk.cd4.p": ["给定名单时的具名归属", "Named attribution given a roster"], "tk.cd5.n": ["语气诊断（可选）", "Delivery diagnostic (optional)"], "tk.cd5.p": ["感知到的语气，单独报告一致性", "Perceived delivery, agreement reported separately"], "da.label": ["数据", "Data"], "da.title": ["25 段音频的试点数据集", "A pilot of 25 clips"], "da.lede": ["素材是英文访谈和播客的节选，经两轮标注。每段约 3 到 5 分钟。", "The material is excerpts of English interviews and podcasts, annotated in two rounds. Clips run about 3 to 5 minutes."], "da.bc.k": ["每段音频的时长，按源视频着色", "Clip length, coloured by source video"], "da.bc.leg": ["斜纹表示待复核", "Hatched means needs media review"], "da.src": ["源视频", "Source"], "da.cat.k": ["类别", "Category"], "da.cat1": ["教育与知识", "Education & Knowledge"], "da.cat2": ["生活与日常", "Lifestyle & Daily"], "da.spk.k": ["每段的说话人数", "Speakers per clip"], "da.spk1": ["两位说话人", "Two speakers"], "da.spk2": ["三位说话人", "Three speakers"], "da.st.k": ["复核状态", "Review status"], "da.st1": ["文本已对齐", "Text aligned"], "da.st2": ["待听音复核", "Needs media review"], "da.multi.d": ["道题需要多个证据时间段", "questions need more than one evidence interval"], "da.topics.k": ["话题覆盖", "Topic coverage"], "da.t1": ["饮食与小餐馆文化", "Food and diner culture"], "da.t2": ["身份与心理调适", "Identity and psychological adaptation"], "da.t3": ["青少年发展", "Adolescent development"], "da.t4": ["影响与决策", "Influence and decision-making"], "da.t5": ["个人行动与职业角色", "Personal initiative and professional roles"], "an.label": ["标注", "Annotation"], "an.title": ["两轮标注，再做独立复核", "Two rounds, then independent review"], "an.lede": ["流程在手册里写成可检查的步骤。试点完成了前两轮，复核与放行检查还在计划中。", "The handbook turns the workflow into checkable steps. The pilot completed the first two rounds. Review and release checks are planned."], "an.done": ["已完成", "Done"], "an.plan": ["计划中", "Planned"], "an.s1.t": ["第一轮 · 发言轮次", "Round 1 · Turns"], "an.s1.d": ["按首次可辨认的发言编号说话人，用整数毫秒标时间，记录转写和语气。", "Speaker IDs by first identifiable speech. Integer-millisecond times. Transcript and delivery."], "an.s2.t": ["第二轮 · 问题与证据", "Round 2 · Question and evidence"], "an.s2.d": ["写一个不泄露答案的问题，并关联它所需的每个发言轮次。", "Write a question that withholds the answer and link every turn it needs."], "an.s3.t": ["独立复核", "Independent review"], "an.s3.d": ["复核人在看到参考答案之前先独立作答。", "Reviewer B answers independently before seeing the reference."], "an.s4.t": ["仲裁", "Adjudication"], "an.s4.d": ["第三人听有分歧的片段，记录旧标签、新标签和理由。", "A third reviewer listens to disputed segments and records the rationale."], "an.s5.t": ["放行检查", "Release checks"], "an.s5.d": ["格式、编号、边界、校验和、泄露、分组、授权。", "Schema, IDs, bounds, checksums, leakage, grouping, permissions."], "an.r.k": ["手册里的四条硬规则", "Four rules the handbook enforces"], "an.r1.t": ["时间", "Time"], "an.r1.d": ["[start_ms, end_ms) 半开区间，片段第 0 毫秒为起点。", "Half-open [start_ms, end_ms) intervals, clip-local clock from 0."], "an.r2.t": ["说话人", "Speaker"], "an.r2.d": ["spk_01、spk_02……按首次可辨认的发言编号，同一人再次出现沿用同一编号。", "spk_01, spk_02… by first identifiable speech. A returning speaker keeps the ID."], "an.r3.t": ["问题", "Question"], "an.r3.d": ["不写姓名、答案要点、具体时间和原话。", "Withholds the name, key points, times and exact wording."], "an.r4.t": ["证据", "Evidence"], "an.r4.d": ["取能说明答案的最短完整发言；被插话隔开的段落分别记录。", "The shortest complete utterance that supports the answer. Separated passages stay separate."], "an.e.k": ["手册点名的常见错误", "Errors the handbook names"], "an.e1": ["把引语记到被引用的人名下", "Crediting a quotation to the person quoted"], "an.e2": ["用源视频的时钟代替片段时钟", "Using the source video clock instead of the clip clock"], "an.e3": ["凭声音、外貌或模型猜测身份", "Inferring identity from voice, appearance or a model's guess"], "an.e4": ["把掌声算作发言", "Counting applause as speech"], "an.cal": ["校准：两位标注者独立标注一批试做样本，差异会写回手册。", "Calibration: two annotators label a trial batch independently, and differences update the handbook."], "sc.label": ["评分", "Scoring"], "sc.title": ["把“谁”“什么”“何时”分开评分", "Score who, what and when separately"], "sc.lede": ["归属、含义和时间会各自出错，所以各有各的指标。含义由人工打分。", "Attribution, meaning and timing fail independently, so each has its own metric. Meaning is graded by humans."], "sc.auto": ["自动", "Auto"], "sc.human": ["人工", "Human"], "sc.both": ["自动 + 人工", "Auto + human"], "sc.opt": ["可选", "Optional"], "sc.m1.t": ["说话人准确率", "Speaker Accuracy"], "sc.m1.d": ["片段内说话人编号是否正确。", "Correct clip-local speaker ID."], "sc.m2.t": ["平均 tIoU", "Mean tIoU"], "sc.m2.d": ["预测与参考时间集合的交并比。", "Intersection over union of predicted and reference time sets."], "sc.m3.t": ["R@1（tIoU 0.3 / 0.5 / 0.7）", "R@1 at tIoU 0.3 / 0.5 / 0.7"], "sc.m3.d": ["单次预测达到各阈值的题目占比。", "Share of items whose single prediction reaches each threshold."], "sc.m4.t": ["说话人 + 时间", "Speaker + Time"], "sc.m4.d": ["说话人正确且 tIoU 不低于 0.5。", "Correct speaker and tIoU of at least 0.5."], "sc.m5.t": ["含义得分", "Meaning Credit"], "sc.m5.d": ["每个要点记 0、0.5 或 1；出现实质性矛盾则该题记 0。", "Each key point scores 0, 0.5 or 1. A material contradiction sets the item to 0."], "sc.m6.t": ["联合通过率", "Joint Pass"], "sc.m6.d": ["说话人正确、tIoU 不低于 0.5，且含义满分。", "Correct speaker, tIoU of at least 0.5 and full meaning credit."], "sc.m7.t": ["姓名匹配", "Identity Name Match"], "sc.m7.d": ["姓名规范化后精确匹配。", "Exact match after name normalisation."], "sc.m8.t": ["覆盖率与有效证据率", "Coverage and Valid Evidence"], "sc.m8.d": ["有提交的比例，以及证据格式正确且不越界的比例。", "Share with a submission, and with well-formed in-bounds evidence."], "lab.k": ["动手试试时间分数", "Try the time score"], "lab.lede": ["参考答案有两个时间段（琥珀色）。拖动预测的起止点，看 tIoU、阈值和证据是否有效。", "The reference has two intervals (amber). Drag the prediction and watch tIoU, thresholds and validity."], "lab.ex": ["示例片段，70 秒，数值与手册中的例子一致。", "Illustrative 70 s clip, matching the handbook's worked example."], "lab.ref": ["参考", "Reference"], "lab.pred": ["预测", "Prediction"], "lab.over": ["交集", "Overlap"], "lab.p1": ["两段精确", "Exact"], "lab.p2": ["一段 10–59 秒", "One span 10–59"], "lab.p3": ["整段音频", "Whole clip"], "lab.p4": ["中间 20%", "Middle 20%"], "lab.p5": ["偏后", "Late"], "lab.start": ["起点", "Start"], "lab.end": ["终点", "End"], "lab.valid": ["证据有效", "Valid evidence"], "lab.invalid": ["证据无效", "Invalid evidence"], "lab.note": ["参考为 10–26 秒和 27–59 秒。预测 10–59 秒得 48/49，约 0.980；多出来的中间时间会拉低分数。", "Reference is 10–26 s and 27–59 s. Predicting 10–59 s gives 48/49, about 0.980. Extra intervening time lowers the score."], "bl.k": ["两个基线给出下限", "Two baselines set the floor"], "bl.lede": ["两个基线都固定预测 spk_01，只用片段时长，不听音频。结果基于 18 道文本已对齐的题。", "Both baselines always predict spk_01 and use only the clip duration. Results use the 18 text-aligned items."], "bl.b1": ["第一位说话人 + 整段音频", "First speaker, entire clip"], "bl.b2": ["第一位说话人 + 中间 20%", "First speaker, middle 20%"], "bl.g1": ["说话人准确率", "Speaker Accuracy"], "bl.g2": ["平均 tIoU", "Mean tIoU"], "bl.g3": ["R@1，tIoU ≥ 0.5", "R@1 at tIoU 0.5"], "bl.g4": ["说话人 + 时间", "Speaker + Time"], "bl.n1": ["两个基线的说话人准确率一样，是因为 18 题里有 7 题的目标说话人恰好是 spk_01（38.89%）。", "Speaker accuracy is identical because 7 of the 18 targets happen to be spk_01 (38.89%)."], "bl.n2": ["整段音频的预测会在长发言上得分，所以协议还要求按证据长度分层，并加入联合指标。", "An entire-clip prediction can score on long turns, so the protocol adds breakdowns by evidence length and a joint metric."], "bl.n3": ["这些只是基线，还没有评测任何模型。", "These are baselines. No model has been evaluated yet."], "ql.label": ["数据质量", "Data quality"], "ql.title": ["先审计，再信任", "Audit before trust"], "ql.lede": ["试点数据由两轮原始标注转换而来。审计记录了每一处修复，并把 7 道题列入听音复核队列。", "The pilot was converted from two rounds of source annotation. The audit records every repair and queues seven items for listening review."], "ql.n1": ["条记录的 JSON 引号被修复", "records with repaired JSON quotes"], "ql.n2": ["道题进入听音复核队列", "items queued for listening review"], "ql.n3": ["道题已完成文本对齐", "items text aligned"], "ql.dc.k": ["源标注中的时长与本地音频时长（秒）", "Duration in the source annotation vs the local audio (seconds)"], "ql.dc.l1": ["源标注", "Source annotation"], "ql.dc.l2": ["本地 MP3", "Local MP3"], "ql.dc.gap": ["秒差", "s gap"], "ql.dc.note": ["wsw_0009 与 wsw_0010 的源时间窗相同，但音视频字节不同。问题解决前，这两段要放在同一个数据划分里。", "wsw_0009 shares a source window with wsw_0010 but has different audio and video bytes. Keep both clips in the same split until resolved."], "ql.f.k": ["转换时做的修复", "Repairs made during conversion"], "ql.f1": ["13 条记录的 JSON 引号语法已修复", "Quote syntax repaired in 13 records"], "ql.f2": ["旧编号映射为补零的新编号", "Legacy IDs mapped to zero-padded IDs"], "ql.f3": ["四段式时钟已规范化；两个无效时钟存为 null 并加标记", "Four-part clocks normalised; two invalid clocks stored as null with a flag"], "ql.f4": ["问题经改写以减少答案泄露", "Questions rewritten to reduce answer leakage"], "rm.label": ["路线", "Roadmap"], "rm.title": ["从试点到正式（gold）发布", "From pilot to gold release"], "rm.g.k": ["正式发布的五项条件", "Five gates for a gold release"], "rm.g1": ["核对片段版本、源偏移和 SHA-256，并解决 7 道听音复核题。", "Verify clip version, source offset and SHA-256. Resolve the seven review items."], "rm.g2": ["两位复核人独立核对每题的含义和最小证据，并记录仲裁。", "Two reviewers verify meaning and minimal evidence for each item. Record adjudication."], "rm.g3": ["检查重复、重叠、共享说话人和节目、答案泄露，并冻结划分。", "Check duplicates, overlap, shared speakers and programs, leakage. Freeze splits."], "rm.g4": ["写明媒体授权，以及评测人如何回放证据。", "Document media permissions and how evaluators replay the evidence."], "rm.g5": ["发布格式、数据说明、评测命令、基线、分布，以及固定的版本和提交号。", "Publish schemas, data card, commands, baselines, distributions, a fixed version and commit hash."], "rm.open": ["未开始", "Open"], "rm.th.k": ["拟定的通过门槛（试点上尚未测量）", "Proposed acceptance thresholds (not yet measured on the pilot)"], "rm.th1": ["说话人一致率", "Speaker agreement"], "rm.th2": ["tIoU 中位数", "Median tIoU"], "rm.th3": ["要点一致率", "Key-point agreement"], "rm.sp.k": ["拟扩展到 800 题时的划分目标", "Split targets for the proposed 800-item expansion"], "rm.sp1": ["开发集", "Development"], "rm.sp2": ["验证集", "Validation"], "rm.sp3": ["留出测试集", "Held-out test"], "rm.sp.note": ["按源视频分组划分，同一来源、近重复和重叠的片段放在同一份里。这些比例是规划目标。", "Split by source video. Clips from the same source, near duplicates and overlaps stay in the same split. Ratios are planning targets."], "rm.run.k": ["复现", "Reproduce"], "rm.run.note": ["需要 Python 3.10 以上，只用标准库，可离线运行。", "Python 3.10 or later, standard library only, runs offline."], "rm.f1": ["7 个 JSON Schema", "7 JSON Schemas"], "rm.f2": ["单元测试与 CI", "Unit tests and CI"], "rm.f3": ["转换、校验、评分三个命令", "Convert, validate and score commands"], "rm.lim.k": ["边界", "Limits"], "rm.l1": ["5 个源视频撑不起模型排名，试点用于检查流程和分析错误。", "Five source videos cannot support model rankings. The pilot checks the workflow and supports error analysis."], "rm.l2": ["源素材没有声明开放再分发许可，媒体和原文转写只保存在本地。", "The source materials have no declared open redistribution licence. Media and verbatim transcripts stay local."], "rm.l3": ["这个页面只使用片段时长、发言轮次边界、问题和证据时间段，不包含转写和姓名。", "This page uses only clip durations, turn boundaries, questions and evidence intervals. It contains no transcripts or names."], "rm.big": ["Who · What · When", "Who · What · When"], "ft.name": ["林尚澄 Katherine Lin", "Katherine Lin 林尚澄"], "ft.copy": ["复制邮箱", "Copy email"], "ft.copied": ["已复制", "Copied"], "ui.close": ["关闭", "Close"]};
+(function(){
+'use strict';
+var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var RM=matchMedia('(prefers-reduced-motion:reduce)').matches;
+var FINE=matchMedia('(pointer:fine)').matches;
+var SPKC=['','#5B7CFA','#14A89C','#F29A2E'];
+var SRC=['#14A89C','#5B7CFA','#F29A2E','#B26AD9','#E2677A'];
+document.documentElement.classList.add('js');
+/* extra copy for the rebuilt page */
+Object.assign(COPY,{
+ 'nav.hero':['标注台','Studio'],
+ 'ui.menu':['目录','Menu'],'ui.play':['播放','Play'],'ui.pause':['暂停','Pause'],
+ 'hs.whatv':['自由文本答案','Free-text answer'],'hs.whatl':['含义由人工按要点打分','Meaning graded by humans, key by key'],
+ 'hs.hint':['拖动时间轴，或选一道题。问题是输入，琥珀色框是模型要找到的证据。页面不含转写和姓名。','Drag the timeline or pick an item. The question is the input; amber boxes are the evidence a model must find. No transcripts or names on this page.'],
+ 'dock.hint':['拖动：浏览 25 段语料','Drag to browse the 25 clips'],
+ 'sc.who.s':['归属','Attribution'],'sc.what.s':['理解','Comprehension'],'sc.when.s':['定位','Grounding'],
+ 'sc.joint':['三者合一','All three together'],'sc.joint.s':['交集与完整性','Intersection and validity'],
+ 'hs.inEv':['正在证据内 · 第 {n} 段','Inside evidence {n}'],'hs.outEv':['证据之外','Outside evidence'],
+ 'hs.who.l':['此刻在说话','Speaking now']
+});
+var lang='zh';
+try{var sv=localStorage.getItem('wswLang');if(sv==='en'||sv==='zh')lang=sv;else if(/^en/i.test(navigator.language||''))lang='en'}catch(e){}
+function t(k){var c=COPY[k];return c?c[lang==='zh'?0:1]:k}
+var listeners=[];
+function setLang(l){
+  lang=l;document.documentElement.lang=l==='zh'?'zh-CN':'en';document.documentElement.classList.toggle('zh',l==='zh');document.documentElement.classList.toggle('en',l==='en');
+  $$('[data-k]').forEach(function(n){n.textContent=t(n.dataset.k)});
+  $$('.langs button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.l===l)});
+  try{localStorage.setItem('wswLang',l)}catch(e){}
+  listeners.forEach(function(f){f()});
+  document.title=l==='zh'?'谁在什么时候说了什么':'Who Said What When';
+}
+function fmt(ms){var s=Math.floor(ms/1000),m=Math.floor(s/60);return m+':'+String(s%60).padStart(2,'0')}
+function fmt1(s){return s.toFixed(1)}
+
+/* ---------- hero: annotation studio ---------- */
+var D=DATA.demo,cur=0,T=0,playing=!RM,lastTs=0,SPEED=0;
+var daw=$('#daw'),lanes=$('#lanes'),evL=$('#evLayer'),ph=$('#ph'),phT=$('#phT'),ruler=$('#ruler');
+var LEFT=function(){return window.innerWidth<=760?70:104};
+function seeded(n){var x=Math.sin(n*127.1)*43758.5453;return x-Math.floor(x)}
+function drawLane(cv,item,spk){
+  var r=cv.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);
+  cv.width=Math.max(1,r.width*dpr);cv.height=Math.max(1,r.height*dpr);
+  var g=cv.getContext('2d');g.scale(dpr,dpr);g.clearRect(0,0,r.width,r.height);
+  var mid=r.height/2,col=SPKC[spk];
+  item.turns.forEach(function(tu){
+    if(tu.spk!==spk)return;
+    var x0=tu.s/item.dur*r.width,x1=tu.e/item.dur*r.width;
+    var isEv=item.tids.indexOf(tu.id)>-1;
+    g.fillStyle=col;g.globalAlpha=isEv?1:.5;
+    for(var x=x0;x<x1;x+=3){
+      var u=(x-x0)/Math.max(1,x1-x0),env=Math.sin(Math.PI*Math.min(1,u*1.0))*.7+.3;
+      var a=(seeded(x*.37+tu.id*11)*.65+.35)*env*(mid-6);
+      g.fillRect(x,mid-a,2,a*2);
+    }
+  });
+  g.globalAlpha=1;
+}
+function buildHero(){
+  var it=D[cur];
+  $('#stQ').textContent=it.q;
+  var nsp=it.nspk,html='';
+  for(var s=1;s<=nsp;s++)html+='<div class="lane"><div class="lh"><b style="color:'+SPKC[s]+'">spk_0'+s+'</b><small>'+(s===it.spk?'★ target':'')+'</small></div><div class="lt"><canvas></canvas></div></div>';
+  lanes.innerHTML=html;
+  $$('canvas',lanes).forEach(function(cv,i){drawLane(cv,it,i+1)});
+  var step=it.dur>240000?60000:30000,rh='';
+  for(var m=0;m<it.dur;m+=step)rh+='<i style="left:'+(m/it.dur*100)+'%" data-t="'+fmt(m)+'"></i>';
+  ruler.innerHTML=rh;
+  evL.innerHTML=it.ev.map(function(e,i){return '<div class="ev" data-i="'+i+'" style="left:calc('+(e[0]/it.dur*100)+'% );width:'+((e[1]-e[0])/it.dur*100)+'%"><b>'+(i+1)+'</b></div>'}).join('');
+  var lt=$('.lane .lt',lanes);
+  // evidence layer aligns with lane track area (everything right of the label column)
+  $('#rWho').textContent='spk_0'+it.spk;
+  $('#rWhen').textContent=it.ev.map(function(e){return fmt(e[0])+'–'+fmt(e[1])}).join('  ·  ');
+  $$('#chips button').forEach(function(b,i){b.setAttribute('aria-pressed',i===cur)});
+  place();
+}
+function place(){
+  var it=D[cur],L=LEFT(),w=daw.clientWidth-L,x=T/it.dur*w;
+  ph.style.left=(L+x)+'px';phT.textContent=fmt(T);
+  var inside=-1;
+  it.ev.forEach(function(e,i){if(T>=e[0]&&T<e[1])inside=i});
+  $$('.ev',evL).forEach(function(n,i){n.classList.toggle('on',i===inside)});
+  $('#lWho').textContent=inside>-1?'● spk_0'+it.spk:'';
+  $('#lWhen').textContent=inside>-1?t('hs.inEv').replace('{n}',inside+1):t('hs.outEv');
+}
+function sizeEv(){var L=LEFT();evL.style.left=L+'px';ph.style.left=L+'px'}
+function frame(ts){
+  if(playing&&!document.hidden){
+    var it=D[cur];if(!lastTs)lastTs=ts;
+    var dt=ts-lastTs;lastTs=ts;
+    T+=dt*(it.dur/16000);
+    if(T>=it.dur)T=0;
+    place();
+  }else lastTs=0;
+  requestAnimationFrame(frame);
+}
+function scrub(ev){
+  var r=daw.getBoundingClientRect(),L=LEFT(),x=Math.min(Math.max(ev.clientX-r.left-L,0),r.width-L);
+  T=x/(r.width-L)*D[cur].dur;place();
+}
+var drag=false;
+daw.addEventListener('pointerdown',function(e){drag=true;playing=false;setPlay();daw.setPointerCapture(e.pointerId);scrub(e)});
+daw.addEventListener('pointermove',function(e){if(drag)scrub(e)});
+daw.addEventListener('pointerup',function(){drag=false});
+daw.addEventListener('pointercancel',function(){drag=false});
+function setPlay(){$('#play').textContent=(playing?'❚❚ ':'▶ ')+t(playing?'ui.pause':'ui.play')}
+$('#play').addEventListener('click',function(){playing=!playing;setPlay()});
+function buildChips(){
+  $('#chips').innerHTML=D.map(function(d,i){return '<button data-i="'+i+'" aria-pressed="'+(i===cur)+'">'+t('hs.l'+(i+1))+'</button>'}).join('');
+  $$('#chips button').forEach(function(b){b.addEventListener('click',function(){cur=+b.dataset.i;T=0;buildHero();})});
+}
+listeners.push(function(){buildChips();setPlay();place()});
+
+/* ---------- chapters, rail, menu ---------- */
+var secs=$$('[data-nav]'),rail=$('#railList'),menuL=$('#menuList');
+secs.forEach(function(s,i){
+  var li=document.createElement('li'),b=document.createElement('button');b.dataset.k=s.dataset.nav;li.appendChild(b);li.dataset.i=i;rail.appendChild(li);
+  b.addEventListener('click',function(){s.scrollIntoView({behavior:RM?'auto':'smooth'})});
+  var m=document.createElement('li');m.innerHTML='<button><small>'+String(i).padStart(2,'0')+'</small><span data-k="'+s.dataset.nav+'"></span></button>';
+  m.firstChild.addEventListener('click',function(){closeMenu();setTimeout(function(){s.scrollIntoView({behavior:'auto'})},60)});menuL.appendChild(m);
+});
+var menu=$('#menu');
+function openMenu(){menu.classList.add('open');menu.setAttribute('aria-hidden','false')}
+function closeMenu(){menu.classList.remove('open');menu.setAttribute('aria-hidden','true')}
+$('#menuBtn').addEventListener('click',openMenu);$('#menuX').addEventListener('click',closeMenu);
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeMenu()});
+var railEl=$('#rail'),dotEl=$('#railDot');
+railEl.addEventListener('mousemove',function(e){
+  railEl.classList.add('hot');
+  $$('li',rail).forEach(function(li){var r=li.getBoundingClientRect(),d=Math.abs(e.clientY-(r.top+r.height/2)),k=Math.max(0,1-d/90);
+    li.style.transform='translateX('+(k*10)+'px) scale('+(1+k*.35)+')';li.classList.toggle('near',k>.5)});
+});
+railEl.addEventListener('mouseleave',function(){railEl.classList.remove('hot');$$('li',rail).forEach(function(li){li.style.transform='';li.classList.remove('near')})});
+
+/* ---------- scroll: progress, rail spy, dock ---------- */
+var ribbon=$('#ribbon'),clips=DATA.clips,TOTAL=clips.reduce(function(a,c){return a+c.dur},0),starts=[],acc=0;
+clips.forEach(function(c){starts.push(acc);acc+=c.dur});
+ribbon.insertAdjacentHTML('afterbegin',clips.map(function(c,i){return '<i data-i="'+i+'" class="'+(c.status!=='text_aligned'?'rev':'')+'" style="flex:'+c.dur+' 1 0;--c:'+SRC[c.src]+'"></i>'}).join(''));
+var rbI=$$('i',ribbon),dkPh=$('#dkPh'),dkT=$('#dkT'),dkC=$('#dkC'),tip=$('#dkTip');
+function clipAt(ms){var k=0;for(var i=0;i<starts.length;i++)if(ms>=starts[i])k=i;return k}
+function onScroll(){
+  var h=document.documentElement,max=h.scrollHeight-innerHeight,p=max>0?Math.min(1,Math.max(0,scrollY/max)):0;
+  $('#prog').style.setProperty('--p',p);
+  var ms=p*TOTAL,k=clipAt(ms);
+  dkPh.style.left=(p*100)+'%';dkT.textContent=fmt(ms);dkC.textContent=clips[k].id;
+  rbI.forEach(function(n,i){n.classList.toggle('on',i===k)});
+  var mid=innerHeight*.4,ai=0;
+  secs.forEach(function(s,i){if(s.getBoundingClientRect().top<=mid)ai=i});
+  $$('li',rail).forEach(function(li,i){li.classList.toggle('on',i===ai)});
+  var li=rail.children[ai];if(li){dotEl.style.transform='translateY('+(li.offsetTop+li.offsetHeight/2-4)+'px)'}
+  var hero=$('#hero').getBoundingClientRect();
+  railEl.classList.toggle('away',hero.bottom>innerHeight*.55);
+}
+addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',function(){buildHero();onScroll()});
+function ribbonSeek(e){
+  var r=ribbon.getBoundingClientRect(),p=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width));
+  var h=document.documentElement;scrollTo({top:p*(h.scrollHeight-innerHeight),behavior:'auto'});
+}
+var rd=false;
+ribbon.addEventListener('pointerdown',function(e){rd=true;ribbon.setPointerCapture(e.pointerId);ribbonSeek(e)});
+ribbon.addEventListener('pointermove',function(e){
+  var r=ribbon.getBoundingClientRect(),p=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)),ms=p*TOTAL,k=clipAt(ms);
+  tip.style.left=(p*100)+'%';tip.textContent=clips[k].id+' · '+fmt(ms);if(rd)ribbonSeek(e)});
+ribbon.addEventListener('pointerup',function(){rd=false});
+
+/* ---------- reveal + counters ---------- */
+function countUp(n){var to=+n.dataset.c,t0=null;if(RM){n.textContent=to;return}
+  function step(ts){if(!t0)t0=ts;var p=Math.min(1,(ts-t0)/900),e=1-Math.pow(1-p,3);n.textContent=Math.round(to*e);if(p<1)requestAnimationFrame(step)}requestAnimationFrame(step)}
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;
+  if(e.target.classList.contains('head'))e.target.classList.add('in');
+  if(e.target.dataset.c)countUp(e.target);io.unobserve(e.target)})},{threshold:.35});
+$$('.head,[data-c]').forEach(function(n){io.observe(n)});
+
+/* ---------- data gantt ---------- */
+function buildGantt(){
+  var rows=[0,1,2,3,4].map(function(s){return clips.filter(function(c){return c.src===s})});
+  var mx=Math.max.apply(null,rows.map(function(r){return r.reduce(function(a,c){return a+c.dur},0)}));
+  $('#gantt').innerHTML=rows.map(function(r,s){
+    var tot=r.reduce(function(a,c){return a+c.dur},0);
+    return '<div class="gr"><span>'+t('da.src')+' '+(s+1)+' · '+fmt(tot)+'</span><div class="gt" style="width:'+(tot/mx*100)+'%">'+r.map(function(c){return '<i class="'+(c.status!=='text_aligned'?'rev':'')+'" style="flex:'+c.dur+' 1 0;--c:'+SRC[s]+'" title="'+c.id+' · '+fmt(c.dur)+' · '+c.spk+' spk · '+c.turns+' turns"></i>'}).join('')+'</div></div>';
+  }).join('');
+  $('#gleg').innerHTML=SRC.map(function(c,i){return '<span><i style="background:'+c+'"></i>'+t('da.src')+' '+(i+1)+'</span>'}).join('');
+}
+listeners.push(buildGantt);
+
+/* ---------- tIoU lab ---------- */
+var REF=[[10,26],[27,59]],LEN=70,pred=[[10,59]];
+var PRE=[[[10,26],[27,59]],[[10,59]],[[0,70]],[[28,42]],[[45,70]]];
+function inter(a,b){return Math.max(0,Math.min(a[1],b[1])-Math.max(a[0],b[0]))}
+function score(){
+  var ref=REF.reduce(function(a,r){return a+r[1]-r[0]},0),pr=0,ov=0;
+  var p=pred.slice().sort(function(a,b){return a[0]-b[0]}),m=[];
+  p.forEach(function(x){var l=m[m.length-1];if(l&&x[0]<=l[1])l[1]=Math.max(l[1],x[1]);else m.push([x[0],x[1]])});
+  m.forEach(function(x){pr+=x[1]-x[0];REF.forEach(function(r){ov+=inter(x,r)})});
+  var un=ref+pr-ov;return {iou:un>0?ov/un:0,valid:m.every(function(x){return x[1]>x[0]&&x[0]>=0&&x[1]<=LEN}),ov:ov,m:m}
+}
+var refBar=$('#refBar'),predBar=$('#predBar'),ovBar=$('#ovBar'),hdS=$('#hdS'),hdE=$('#hdE');
+refBar.innerHTML=REF.map(function(r){return '<i style="left:'+r[0]/LEN*100+'%;width:'+(r[1]-r[0])/LEN*100+'%"></i>'}).join('');
+$('#tax').innerHTML=[0,10,20,30,40,50,60,70].map(function(s){return '<span>'+s+'s</span>'}).join('');
+function renderLab(){
+  var sc=score();
+  predBar.querySelectorAll('.pr').forEach(function(n){n.remove()});
+  pred.forEach(function(p){var i=document.createElement('i');i.className='pr';i.style.left=p[0]/LEN*100+'%';i.style.width=Math.max(0,p[1]-p[0])/LEN*100+'%';predBar.insertBefore(i,hdS)});
+  var one=pred.length===1;hdS.style.display=hdE.style.display=one?'':'none';
+  if(one){hdS.style.left=pred[0][0]/LEN*100+'%';hdE.style.left=pred[0][1]/LEN*100+'%';hdS.setAttribute('aria-valuenow',pred[0][0]);hdE.setAttribute('aria-valuenow',pred[0][1])}
+  var o='';sc.m.forEach(function(x){REF.forEach(function(r){var a=Math.max(x[0],r[0]),b=Math.min(x[1],r[1]);if(b>a)o+='<i style="left:'+a/LEN*100+'%;width:'+(b-a)/LEN*100+'%"></i>'})});ovBar.innerHTML=o;
+  var C=2*Math.PI*58;$('#ringFg').style.strokeDasharray=(sc.iou*C)+' '+C;$('#ringT').textContent=sc.iou.toFixed(3);
+  $$('#thr span').forEach(function(s){s.classList.toggle('y',sc.valid&&sc.iou>=+s.dataset.t)});
+  var v=$('#vld');v.textContent=(sc.valid?'✓ ':'✕ ')+t(sc.valid?'lab.valid':'lab.invalid');v.classList.toggle('bad',!sc.valid);
+}
+function buildPresets(){
+  $('#presets').innerHTML=PRE.map(function(p,i){return '<button data-i="'+i+'" aria-pressed="'+(JSON.stringify(p)===JSON.stringify(pred))+'">'+t('lab.p'+(i+1))+'</button>'}).join('');
+  $$('#presets button').forEach(function(b){b.addEventListener('click',function(){pred=JSON.parse(JSON.stringify(PRE[+b.dataset.i]));buildPresets();renderLab()})});
+}
+function dragHd(h,idx){
+  function mv(e){var r=predBar.getBoundingClientRect(),v=Math.round(Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))*LEN);
+    if(idx===0)pred[0][0]=Math.min(v,pred[0][1]);else pred[0][1]=Math.max(v,pred[0][0]);renderLab();$$('#presets button').forEach(function(b){b.setAttribute('aria-pressed','false')})}
+  h.addEventListener('pointerdown',function(e){e.preventDefault();h.setPointerCapture(e.pointerId);h.onpointermove=mv});
+  h.addEventListener('pointerup',function(){h.onpointermove=null});
+  h.addEventListener('keydown',function(e){var d=e.key==='ArrowLeft'?-1:e.key==='ArrowRight'?1:0;if(!d)return;e.preventDefault();
+    if(idx===0)pred[0][0]=Math.max(0,Math.min(pred[0][1],pred[0][0]+d));else pred[0][1]=Math.min(LEN,Math.max(pred[0][0],pred[0][1]+d));renderLab()});
+}
+dragHd(hdS,0);dragHd(hdE,1);
+listeners.push(function(){buildPresets();renderLab()});
+
+/* ---------- baselines ---------- */
+var BL=[['bl.g1',38.89,38.89,'%'],['bl.g2',30.4,11.0,'t'],['bl.g3',22.22,5.56,'%'],['bl.g4',16.67,0,'%']];
+function buildBL(){
+  $('#bl').innerHTML=BL.map(function(b){
+    function row(v,c){var lab=b[3]==='t'?(v/100).toFixed(3):v.toFixed(2)+'%';return '<div class="bar"><div class="tk"><i style="--w:'+v+'%;background:'+c+'"></i></div><span>'+lab+'</span></div>'}
+    return '<div class="bl-r"><b>'+t(b[0])+'</b><div class="pair">'+row(b[1],'var(--who)')+row(b[2],'var(--when)')+'</div></div>'}).join('');
+}
+listeners.push(buildBL);
+
+/* ---------- duration dumbbell ---------- */
+var DB=[['wsw_0024','v5-8',264,222.015],['wsw_0002','v1-2',323,298.083],['wsw_0015','v4-3',239,221.022],['wsw_0010','v3-3',193,180.010],['wsw_0017','v5-1',229,239.020],['wsw_0001','v1-1',252,254.145]];
+(function(){var lo=170,hi=340,pc=function(v){return (v-lo)/(hi-lo)*100};
+  $('#db').innerHTML=DB.map(function(d){var a=pc(Math.min(d[2],d[3])),b=pc(Math.max(d[2],d[3]));
+    return '<div class="dbr"><span>'+d[0]+'</span><div class="dbt"><i class="ln" style="left:'+a+'%;width:'+(b-a)+'%"></i><i class="p s" style="left:'+pc(d[2])+'%"></i><i class="p m" style="left:'+pc(d[3])+'%"></i></div><span>'+Math.abs(d[2]-d[3]).toFixed(0)+'s</span></div>'}).join('')})();
+
+/* ---------- copy email ---------- */
+$('#copy').addEventListener('click',function(){var b=$('#copy'),m=$('#mail').textContent;
+  function done(){b.textContent=t('ft.copied');setTimeout(function(){b.textContent=t('ft.copy')},1400)}
+  try{navigator.clipboard.writeText(m).then(done,done)}catch(e){done()}});
+
+/* ---------- pointer: a timecode cursor ---------- */
+if(FINE&&!RM){
+  var dot=$('#cdot'),chair=$('#chair'),chT=$('#chT'),mx=0,my=0,hot=false;
+  addEventListener('pointermove',function(e){
+    mx=e.clientX;my=e.clientY;dot.classList.add('on');dot.style.transform='translate('+mx+'px,'+my+'px)';
+    var el=e.target.closest&&e.target.closest('a,button,.ribbon,.chip,.hd,[role=slider]');
+    dot.classList.toggle('hot',!!el);
+    var z=e.target.closest&&e.target.closest('.daw,.tbar,.gt');
+    if(z&&!z.classList.contains('ref')){
+      var r=z.getBoundingClientRect(),p=Math.min(1,Math.max(0,(mx-r.left)/r.width));
+      chair.style.left=mx+'px';chair.style.top=r.top+'px';chair.style.height=r.height+'px';chair.classList.add('on');
+      var txt=z.classList.contains('daw')?fmt(p*D[cur].dur):z.classList.contains('tbar')?Math.round(p*LEN)+'s':'';
+      chT.textContent=txt;chT.style.display=txt?'':'none';
+      chair.classList.toggle('dark-surface',!!z.classList.contains('daw'));
+    }else chair.classList.remove('on');
+  },{passive:true});
+  document.addEventListener('pointerleave',function(){dot.classList.remove('on');chair.classList.remove('on')});
+  addEventListener('pointerdown',function(e){var p=document.createElement('i');p.id='cping';p.style.left=e.clientX+'px';p.style.top=e.clientY+'px';document.body.appendChild(p);setTimeout(function(){p.remove()},650)});
+}
+
+/* ---------- init ---------- */
+$$('.langs button').forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.l)})});
+setLang(lang);buildChips();buildHero();sizeEv();setPlay();onScroll();requestAnimationFrame(frame);
+})();
+</script></body></html>
