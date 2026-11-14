@@ -1,31 +1,31 @@
-# 迁移审计与回听清单
+# Migration Audit and Audio Review Queue
 
-## 迁移如何处理旧数据
+## Changes to the source annotations
 
-- 52 个 JSON 中，13 个分片第一轮及第一轮合并文件因 `video_id` 使用错误的结束引号而无法解析。只修这个字段的引号；合并文件中的 13 处为同批记录，不重复计数。
-- 以同目录的分片材料关联两轮，合并 JSON 用来做差异核对，不作为额外题。这样修正 `wsw_0001` 的旧 `case_001` 和 `wsw_0012` 的旧 `v4` 指向；所有题保留原题号映射并补零。
-- 归一 `v5-8` 的四段原视频时钟 `00:01:03:38` 为 01:03:38（丢弃多余的前导零段），没有因此认定轮次时间正确。
-- `v3-3` 有一处以时间字符串为键而缺少 `end_time`，另一处秒字段为 80；在规范表中写 `null` 和 `invalid_legacy_clock`。不擅自填上边界。原字面量可在本地原轮次归档中查看。
-- 对旧答案的语义重写、跨轮次证据修正、合并稿差异逐条可查 `data/migration_audit.jsonl`。新题里删除了直接给出的情绪标签、部分答案及不适合主赛道的身份线索。句子要点依据原轮次与旧答文整理，未做实际双人听审。
+- Thirteen per-clip Round 1 JSON files used an invalid closing quotation mark in `video_id`. The aggregate file repeats those same 13 records. The converter repairs that field and preserves other source wording in the local archive.
+- Pair annotations by clip directory and use aggregate files for comparison. This resolves the legacy clip references `case_001` for `wsw_0001` and `v4` for `wsw_0012`. The audit keeps a mapping from every legacy question ID to its zero-padded ID.
+- Normalize the four-part source clock `00:01:03:38` for `v5-8` to `01:03:38` by removing the extra leading zero component. Turn timing still requires review.
+- In `v3-3`, one turn is missing `end_time` and uses a timestamp as a key. Another uses 80 in the seconds field. Both endpoints are stored as `null` with `invalid_legacy_clock`. The original values are available in the local archive.
+- The migration rewrites questions to reduce answer leakage and derives key points from the source turns and answers. Published topic and role metadata use English translations. Item-level turn edits and differences between the per-clip and aggregate files appear in `data/migration_audit.jsonl`. Independent audio review is pending.
 
-| 题 | 文本核对后处理 |
+| Item | Text-based evidence edit |
 | --- | --- |
-| `wsw_0003` | 轮次 4 仅铺垫进学校；轮次 6 才说到试奏和年龄。拆成两段 |
-| `wsw_0014` | 分片第一、七轮及问答均支持双区间；采用 `[0,48000)` 和 `[136000,190000)`，保留合并稿只列第一轮的差异 |
-| `wsw_0018` | 轮次 2 解释处境、轮次 4 解释问题；不包入中间另一位说话人的应和 |
-| `wsw_0020` | 等待的动机与开始行动的建议分别落在相邻的轮次 2、3，合并为一个连续区间 |
-| `wsw_0024` | 原轮次 2 只批评真实性；加入 4（职业一致性）和 8（练习方法）。音频版本冲突未解，维持待审 |
+| `wsw_0003` | Turn 4 sets up the school visit. Turn 6 contains the audition and age confirmation. Keep both intervals. |
+| `wsw_0014` | The per-clip records support `[0, 48000)` and `[136000, 190000)`. Record the aggregate's omission of the second turn. |
+| `wsw_0018` | Turn 2 explains a situation and turn 4 explains a problem. The intervening acknowledgment belongs to another speaker. |
+| `wsw_0020` | Turns 2 and 3 cover the reason for waiting and the alternative. Merge the adjacent evidence intervals. |
+| `wsw_0024` | Turn 2 critiques authenticity. Add turns 4 and 8 for the proposed alternative and practice method. Keep the item in the audio review queue. |
 
-## 优先回听的 7 道
+## Seven items for priority audio review
 
-| 题号 / 片段 | 矛盾 | 复核行动 |
+| Item and clip | Discrepancy | Review action |
 | --- | --- | --- |
-| `wsw_0001` / v1-1 | 申报窗 252 秒，本地 MP3 254.145 秒 | 对齐开头与结尾；核对是否有多余片头或剪辑差异 |
-| `wsw_0002` / v1-2 | 申报窗 323 秒，本地 298.083 秒 | 用首尾语句定位原视频，确认是起点、终点还是导出缺段 |
-| `wsw_0009` / v3-2 | 与 v3-3 报同一原视频时间窗，但音频和视频字节不同 | 核对两段素材实际起止，避免同窗错误及切分泄漏 |
-| `wsw_0010` / v3-3 | 同上；本地 180.010 秒，申报窗 193 秒；两处轮次时间无效 | 重建第四、六轮边界，核对本题目标轮次与真实剪辑 |
-| `wsw_0015` / v4-3 | 尾部轮次达 239 秒，本地 221.022 秒 | 试听 03:20 后，找到与转录匹配的导出版本或重标尾段 |
-| `wsw_0017` / v5-1 | 申报窗 229 秒，本地 239.020 秒 | 核对片头/片尾偏差及目标证据 |
-| `wsw_0024` / v5-8 | 旧轮次达 264 秒，本地 222.015 秒；合并稿与分片答案不一致 | 核对准确文件版本后重新切分并逐个验证三个要点与证据 |
+| `wsw_0001`, v1-1 | Reported window 252 s, local MP3 254.145 s | Align the opening and end. Check for an extra intro or different edit. |
+| `wsw_0002`, v1-2 | Reported window 323 s, local MP3 298.083 s | Locate the first and last utterances in the source to determine which boundary or export differs. |
+| `wsw_0009`, v3-2 | Same reported source window as v3-3, with different audio and video bytes | Verify both clip boundaries and keep the clips together in any split until resolved. |
+| `wsw_0010`, v3-3 | Shared reported window, 180.010 s of audio versus 193 s reported, and two invalid turn clocks | Rebuild the fourth and sixth turn boundaries and verify the target turn against the local edit. |
+| `wsw_0015`, v4-3 | Turns extend to 239 s, local MP3 221.022 s | Listen from 3:20 onward and match the correct export or relabel the final turns. |
+| `wsw_0017`, v5-1 | Reported window 229 s, local MP3 239.020 s | Check opening and ending offsets and verify the target evidence. |
+| `wsw_0024`, v5-8 | Turns extend to 264 s, local MP3 222.015 s, with conflicting aggregate and per-clip answers | Match the source edit and verify all three key points and their intervals. |
 
-默认评分只使用 18 条 `text_aligned` 题。通过 `--include-review` 可把全部 25 题跑通作工程诊断，不能据此宣布金标评分。18 道也需要按手册试听复核。例如 v2-3 的第二轮次开头含上一轮未说完的句子及提问，试听时应确认换人点，并缩到嘉宾真正解释概念的证据句。上表的 MP3 时长为探测器估计，亚秒误差不构成剪辑一致性证明。
+The default scorer uses the 18 `text_aligned` items. Pass `--include-review` to run all 25 as a workflow check. All items still require independent listening review. In v2-3, for example, the second turn begins with a continuation of the prior sentence and a question. Verify the speaker change and trim the evidence to the guest's explanation. MP3 durations above are tool estimates.

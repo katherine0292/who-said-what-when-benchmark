@@ -11,6 +11,7 @@ from urllib.parse import parse_qs, urlparse
 
 from .common import CATEGORIES, ROOT, VERSION, timestamp_ms, write_json, write_rows
 from .editorial import EDITS, REVIEW, TONE
+from .english_metadata import CLIP_METADATA
 
 
 def sha256(path):
@@ -77,8 +78,9 @@ def windows(turns):
 
 
 def convert(source, out):
-    if (source / "视频标注").is_dir():
-        source = source / "视频标注"
+    annotation_dir = source / "\u89c6\u9891\u6807\u6ce8"
+    if annotation_dir.is_dir():
+        source = annotation_dir
     aggregates = {}
     for round_no in (1, 2):
         path, = source.glob(f"*_round{round_no}.json")
@@ -96,6 +98,7 @@ def convert(source, out):
         number = int(legacy_id.split("_")[-1])
         qid = f"wsw_{number:04d}"
         clip_id = directory.name
+        topic, role = CLIP_METADATA[clip_id]
         category = first["category"]
         if category not in CATEGORIES:
             raise ValueError(f"Unknown category {category!r}")
@@ -143,14 +146,14 @@ def convert(source, out):
         inputs.append({"id": qid, "clip_id": clip_id, "duration_ms": length,
                        "language": "en", "question": question})
         labels.append({"id": qid, "clip_id": clip_id, "speaker_id": speaker_id,
-                       "identity_ref": {"name": name, "role": source_turn["identity"]},
+                       "identity_ref": {"name": name, "role": role},
                        "voice_ref": voice_traits(source_turn["audio_speaker_id"]),
                        "tone_ref": TONE[number], "tone_source": second["emotion"],
                        "key_points": key_points, "evidence_ms": evidence, "turn_ids": selected,
                        "status": draft, "split": "pilot"})
         clips.append({"clip_id": clip_id, "source_id": source_id, "source_url": url,
                       "source_window_reported_ms": source_window, "duration_ms": length,
-                      "category": category, "topic": first["topic"], "language": "en",
+                      "category": category, "topic": topic, "language": "en",
                       "speaker_count": len(speakers), "turn_count": len(turns), "status": draft,
                       "review_flags": flags, "split": "pilot"})
         topic_seen[category] += 1
@@ -196,7 +199,7 @@ def convert(source, out):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("source", type=Path, help="Original benchmark folder or its 视频标注 subfolder")
+    parser.add_argument("source", type=Path, help="Original benchmark folder or its annotation subfolder")
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
     convert(args.source, args.out)

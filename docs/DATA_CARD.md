@@ -1,47 +1,47 @@
-# 项目说明与数据卡
+# Data Card
 
-## 1. 标注对象
+## 1. Annotation scope
 
-来源材料是英文访谈、播客对话的摘录及其两轮标注。以「一个截取音频为一个 clip」建立媒体记录；以「同一个人在一次连续发言中表达的内容」作为发言轮次；以「一题和支持这题的一个或多个轮次」作为评分样本。视频是音频的来源，也可作为人工核对身份的补充材料。主评测只使用音频证据。
+The source material consists of excerpts from English-language interviews and podcasts, along with two rounds of annotations. A **clip** is one extracted audio file. A **turn** is a continuous contribution by one speaker. An **evaluation item** links one question to one or more supporting turns. Annotators can consult the source video to verify identities. The main task uses audible evidence.
 
-标注三条主线：**Who**（片段内说话人归属）、**What**（意思、观点或提问）、**When**（能定位并复核的时间段）。可感知的语气和声音特征帮助诊断音频理解；人物姓名、节目角色属于单独的身份扩展条件。原文量子技术片段是格式模板，不计入这批真实样本。
+**Who** identifies the speaker within the clip. **What** captures the meaning, position, or question expressed. **When** identifies the audio intervals where a reviewer can hear the supporting evidence. Perceived delivery and voice traits provide optional diagnostics. Names and program roles are evaluated under a separate input condition. The quantum-technology example in the original instructions illustrates the format and is outside the pilot dataset.
 
-## 2. 当前主题和覆盖
+## 2. Topic coverage
 
-| 来源组 | 题数 | 主题举例 |
+| Source group | Questions | Topics |
 | --- | ---: | --- |
-| v1 | 2 | 美食文化、餐馆的包容性、共同用餐与信任 |
-| v2 | 5 | 个人经历、自我肯定、身份早闭、认知重评 |
-| v3 | 5 | 青少年身份、自尊研究、刻板印象与归属 |
-| v4 | 5 | 受访者描述的影响框架、社会脚本、感知与权威 |
-| v5 | 8 | 行动与等待、处境与问题、职业一致性 |
+| v1 | 2 | Food culture, the inclusiveness of diners, and trust through shared meals |
+| v2 | 5 | Personal history, self-affirmation, identity foreclosure, and cognitive reappraisal |
+| v3 | 5 | Adolescent identity, self-esteem research, stereotypes, and belonging |
+| v4 | 5 | Interviewee accounts of social scripts, perception, influence, and authority |
+| v5 | 8 | Taking action, situations versus problems, and consistency in professional roles |
 
-现有一级类别：Education & Knowledge 23 条、Lifestyle & Daily 2 条。每段约 3:00–4:58；两段有 3 位说话人，其余有 2 位。5 个来源中有主持人复用。原说明的 800 道题是扩容目标；当前样本 25 道，覆盖的语言、类别、节目和说话人范围有限。音频合计时长按 25 个本地片段相加，未去除可能的来源时间重叠。
+There are 23 Education & Knowledge items and 2 Lifestyle & Daily items. Clips run approximately 3:00 to 4:58. Two clips have three speakers and the other 23 have two. Some sources share a host. The original instructions proposed 800 questions as an expansion target. The 25-question pilot covers a limited range of languages, categories, programs, and speakers. Total duration sums the local clips, including any overlapping source material.
 
-## 3. 背景与解决的核心问题
+## 3. Motivation and intended uses
 
-自动转录能告诉我们录音里有哪些词；说话人分离能告诉我们什么时候换人；问答模型可以概括意思。实际使用常需要把三者连在一起。例如一段会议中，主持人问「是不是应该延后」，两名参与者分别回应赞成和反对。只检索到关键词「延后」，无法证明谁提出了建议，也无法作为纪要引用。
+Automatic speech recognition supplies words, diarization tracks speaker changes, and question answering summarizes meaning. Many applications need all three. In a meeting, for example, the host might ask about a delay while two participants take opposite positions. A keyword search for “delay” cannot establish who proposed it or where the rationale appears.
 
-| 想解决的问题 | 观察什么 | 可支持的工作 |
+| Failure to diagnose | Evidence to check | Application |
 | --- | --- | --- |
-| 把主持人的复述误认作嘉宾立场 | 同一话题下不同声音的归属；区分提问、引用与断言 | 访谈索引、带来源的会议纪要 |
-| 总结流畅但把关键条件说反 | 关键事实点、因果、否定和保留条件 | 助手回归测试、质检 |
-| 答案有内容但时间戳无法复核 | 支持答案的最小时间证据；跨轮次遗漏和过宽覆盖 | 音频检索、播放器跳转 |
-| 把语气误作人物身份或内心状态 | 可听见的表达方式与节目身份分别记录 | 音频理解诊断、降低身份猜测 |
+| The host's paraphrase is attributed to the guest | Speaker assignment and the distinction between questions, quotations, and assertions | Interview indexes and source-linked meeting notes |
+| The summary reverses a key qualification | Key points, causal direction, negation, and conditions | Assistant evaluation and quality assurance |
+| The answer's timestamp is hard to verify | The shortest intervals that support the answer and whether any necessary turns were missed | Audio retrieval and playback navigation |
+| A delivery cue is treated as identity or an internal emotion | Audible traits, separately documented names and roles, and uncertain cases | Audio comprehension diagnostics |
 
-比较音频条件与 ASR 文本条件，可观察模型是否依赖韵律和换人线索；比较独立说话人正确率、内容得分和时间 IoU，可定位该改进转录、分离、检索还是问答。先导版本用于验证流程和揭示数据问题，成绩不支持总体音频理解能力或模型优劣的结论。
+Comparing audio and ASR conditions can show how results change when prosody and speaker-change cues are unavailable. Speaker accuracy, meaning scores, and temporal intersection over union help distinguish transcription, diarization, retrieval, and question-answering errors. The pilot supports workflow checks and error analysis. Its size and source concentration limit population-level claims and model comparisons.
 
-## 4. 数据形成与人审状态
+## 4. Collection and review status
 
-- 原材料：25 个本地 MOV、25 个 MP3、50 个分片 JSON 和 2 个合并 JSON。说明提出模型起草后人工精修；提交文件没有提供逐项审核人、独立一致性统计或授权记录。
-- 本次处理：严格解析、重建键、核对合并稿、探测音频时长、重写问题和语义要点、检查文本证据。178 条原始轮次保留时间和说话人关系；可追溯的旧版记录留在本地。
-- 18 道 `text_aligned` 题可诊断自动评分。7 道 `needs_media_review` 题需优先回听和核对剪辑。两类都未取得本项目双人听审金标。
-- 说话人的姓名和角色来自原标注，当前未独立向节目官方信息复核。声音描述和语气是感知标签，部分来源于原草稿。年龄与性别推断不进入正式结构化参考；口音仅作可选听感描述，不用于排名。
+- The submission contains 25 MOV files, 25 MP3 files, 50 per-clip JSON files, and 2 aggregate JSON files. The original workflow proposed model-assisted drafts and human refinement. The files provide no per-item reviewer history, inter-annotator agreement results, or permissions records.
+- Migration repaired JSON syntax, reconciled IDs, compared aggregate and per-clip records, estimated MP3 duration, and revised questions, key points, and supporting turns against the submitted text. The 178 turn records retain speaker links and timing information. Original annotation text is preserved in the local archive.
+- The default evaluation uses 18 `text_aligned` questions. Seven `needs_media_review` questions have timing or version conflicts that warrant priority review. All 25 await independent listening review before gold release.
+- Names and roles come from the submitted annotations and await independent verification against program sources. Delivery and voice traits are perceived attributes, some inherited from the initial drafts. Age and inferred gender are omitted from the structured references. Accent impressions are optional and carry no ranking weight.
 
-## 5. 使用、权利与版本维护
+## 5. Access and versioning
 
-仓库保存整理后的题目、参考要点、轮次元数据和评分工具；媒体和完整逐字转录留在本地。公开可播放的节目链接不等同于对音视频、转录或第三方素材再分发的授权。扩容时记录来源、许可与审核状态，确定可开放范围后再决定公开版本。识别范围限于片段内角色或给定名单，不能将此数据当作声纹识别训练集或对个体属性作推断。
+The repository includes edited questions, reference key points, turn metadata, and scoring tools. Media and verbatim transcripts are stored locally. Record source and redistribution permissions before preparing a public dataset release. Use the data to evaluate attribution within a clip or within a supplied roster. Voiceprint identification and personal attribute inference are outside the task scope.
 
-变更问题含义、证据时间、参考要点或评分口径时，记录受影响 ID 与原因；冻结版本后用版本号和提交哈希报告成绩。修复错误时保留旧版及差异，不复用已经退役的 ID。
+Record affected IDs and reasons when changing question meaning, evidence intervals, reference points, or scoring rules. Report a frozen dataset version and commit hash with each result. Keep a record of fixes and retire IDs when the underlying item changes substantially.
 
-数据卡结构参考 [Datasheets for Datasets](https://arxiv.org/abs/1803.09010)。
+The documentation structure follows [Datasheets for Datasets](https://arxiv.org/abs/1803.09010).

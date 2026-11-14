@@ -1,59 +1,61 @@
-# Benchmark 协议｜任务、切分、评分与放行
+# Benchmark Protocol
 
-## 1. 任务定义
+## 1. Task and input conditions
 
-主任务输入为一段实际裁剪的英语对话音频，加上一道不带答案的文本问题。模型输出片段内目标说话人、自由文本答案、片段内证据区间。协议中「谁」指片段内声音归属。说话人 ID 按首次可确认发言排序；若采用模型自己的匿名 ID，应在评测前做一次按时间的映射，并报告方式，不能依据答题参考答案事后映射。
+In the main task, the model receives a clipped English conversation and a question that withholds the answer. It returns a clip-local speaker ID, a free-text answer, and one or more evidence intervals. Assign speaker IDs in order of first identifiable speech. If the model emits its own anonymous IDs, map them once by time before evaluation and report the mapping procedure. Reference answers are held out of this mapping.
 
-| 条件 | 模型可以看到 | 适合比较 |
+| Condition | Model inputs | Purpose |
 | --- | --- | --- |
-| Audio-only 主赛道 | 音频、问题、片段时长、ID 编号规则 | 真实听觉证据下的归因、语义与定位 |
-| ASR 对照 | 同一音频的统一自动转录与时间戳、问题 | 对照内容是否可从文本获得；报告 ASR 版本与是否提供分离 |
-| 题目对照 | 题目与时长 | 测试问题措辞、常识或固定时间猜测造成的虚高 |
-| 身份扩展 | 音频、问题、经核对的姓名和角色候选名单，不预给声音到名字的映射 | 条件化的人名归因 |
-| 可选语气诊断 | 音频、情绪线索未泄漏的专用问题 | 可感知表达方式，另报人工一致性 |
+| Audio-only main track | Audio, question, clip duration, and speaker numbering rule | Evaluate attribution, meaning, and temporal grounding from audible evidence |
+| ASR control | A standardized automatic transcript with timestamps and the same question | Measure performance with text input. Report the ASR version and whether diarization was supplied. |
+| Question-only control | Question and clip duration | Check how much models can infer from question wording, general knowledge, or fixed time guesses |
+| Identity extension | Audio, question, and a verified roster of names and roles, with the voice-to-name mapping withheld | Evaluate named speaker attribution given the roster |
+| Optional delivery diagnostic | Audio and a dedicated question that withholds the delivery label | Assess perceived delivery and report inter-annotator agreement separately |
 
-基准模型输入应使用 `data/inputs.jsonl` 逐行组装。只给音频本身；文件名去掉人名和原视频 ID。URL、中文主题、参考答案、转录、轮次表、答案候选、标注记录和搜索结果都属于评测方数据。来源链接不能送给 audio-only 模型。用公开视频做评测仍有预训练记忆或来源猜测风险；报告模型版本、音频预处理、提示词、采样参数、是否允许外部搜索和重复运行规则。
+Build model prompts from `data/inputs.jsonl` and the matching audio. Remove names and original video IDs from audio filenames. The evaluation team retains source URLs, topics, references, transcripts, turns, candidate answers, and annotation logs. Public source material can appear in model pretraining, which can affect results. Report the model version, audio preprocessing, prompt, sampling settings, external-search policy, and repeat-run policy.
 
-## 2. 切分与规模
+## 2. Data splits and scale
 
-本版只有 `pilot`，所有数据都是流程验证样本，不将这 5 个原始视频随机按题拆分。正式扩容先按原视频、节目/系列、复用说话人及重复内容建立分组，按需求构造隔离集；同来源、重复和明显时间重叠的片段必须同组。若验证对新说话人的泛化，应使测试说话人与开发集不重合；若验证新节目，按节目分组。多项约束冲突时分别发布不同切分设定并说明。
+All current items belong to `pilot`. For formal splits, group by source video and identify shared programs, speakers, and repeated content. Keep clips from the same source, near duplicates, and overlapping source intervals in the same split. A speaker generalization test should hold out speakers. A program generalization test should hold out programs. If both constraints cannot be met in one split, document and report the two settings separately.
 
-以约 800 题作为规划目标时，可先定约 70%/15%/15% 的开发、验证和保留测试比例，再以实际组数和类别覆盖调整。记录每组题量、说话人数、证据长度、单/多区间、语言和类别。不要用增加同一节目下的相似题代替增加独立来源。仅对正式留出集声明测试成绩；冻结该集的媒体、题目、参考和规则，评测方单独持有答案。
+For the proposed 800-item expansion, 70% development, 15% validation, and 15% held-out test are planning targets. Adjust them to the number of independent groups and category coverage. Report counts by source group, speaker count, evidence length, evidence interval count, language, and category. Add independent sources to improve coverage. Freeze the test media, questions, references, and rules, and keep the held-out answers with the evaluation team.
 
-## 3. 自动分与人工分
+## 3. Automatic and human scoring
 
-| 指标 | 定义 |
+| Metric | Definition |
 | --- | --- |
-| Speaker Accuracy | 提交的片段内 `speaker_id` 与参考一致的题数 / 评测题数 |
-| Mean tIoU | 逐题算证据时间集合的交集长度 / 并集长度，再平均 |
-| R@1 tIoU ≥ 0.3、0.5、0.7 | 单次提交达到阈值的题数 / 评测题数 |
-| Speaker + Time | 说话人正确且 tIoU ≥ 0.5 的题占比 |
-| Meaning Credit | 人工按题逐点给 0、0.5、1；严重矛盾时整题为 0；只在已判语义的样本上取均值，同时报覆盖率 |
-| Joint Pass | 说话人正确、tIoU ≥ 0.5、语义满分；分母为评测全部题。部分已判时这是保守下界；零语义判分时返回空值 |
-| Identity Name Match | 扩展诊断：姓名归一化后完全一致；当前不核算别名、节目角色与语气 |
-| Coverage / Valid Evidence Rate | 分别统计是否提交、证据区间格式和边界是否有效 |
+| Speaker Accuracy | Proportion of evaluated items with the correct clip-local `speaker_id` |
+| Mean tIoU | Mean per-item ratio of the intersection duration to the union duration of predicted and reference time sets |
+| R@1 at tIoU 0.3, 0.5, and 0.7 | Proportion of items whose single prediction reaches each threshold |
+| Speaker + Time | Proportion with the correct speaker and tIoU of at least 0.5 |
+| Meaning Credit | Mean across human-scored items, with each key point awarded 0, 0.5, or 1 and a material contradiction reducing the item to zero. Report grading coverage. |
+| Joint Pass | Proportion with correct speaker, tIoU of at least 0.5, and full meaning credit. The denominator is all evaluated items, so partial human grading yields a lower bound. With zero graded items the value is null. |
+| Identity Name Match | Optional exact match after name normalization. Roles, aliases, and delivery do not contribute to this diagnostic. |
+| Coverage and Valid Evidence Rate | Proportions with a submission and with correctly formatted in-bounds evidence, respectively |
 
-不连续证据以并集计算，不能把首尾之间的空段当作参考。例：参考 10–26 秒及 27–59 秒，预测 10–59 秒，tIoU = 48 / 49 ≈ 0.980；如果错误包入 50 秒其他人发言，惩罚会明显增加。区间必须为整数毫秒、正长度、升序且不重叠、不超媒体。未知题号或重复提交会报错，漏答算错；证据非法时定位分为 0。全局微平均和按来源宏平均都报告；类别、来源、复核状态和证据区间数分切片，标出样本数。正式评测若报告置信区间，以来源组做 bootstrap，并解释独立组数限制；不要在 5 个来源上作稳定排名推断。
+Compute tIoU over the union of the actual intervals in each set. For reference intervals of 10–26 seconds and 27–59 seconds, predicting 10–59 seconds yields 48/49, or approximately 0.980. Extra intervening time reduces the score. Evidence uses sorted, non-overlapping, positive-length integer-millisecond intervals bounded by the clip duration. Unknown or duplicate IDs cause an error. Missing predictions and invalid evidence receive zero for the corresponding metrics.
 
-语义判分：事实点完整且与证据一致给 1，部分遗漏或表达模糊给 0.5，错漏给 0。人名和时间单独评分。标注员应接受同义表述，不奖励照抄参考答案。颠倒立场、改变否定或捏造关键因果视为实质矛盾。正式评测采用盲审或预校准并抽样复核的判分流程，现有实现接收人工判断 JSONL。项目没有把自动词匹配或大模型判断当作语义金分。
+Report overall item averages, source-level macro averages for tIoU and Speaker + Time, and breakdowns by category, source, review status, and number of reference intervals. Include counts. For a larger held-out evaluation, use source-group bootstrap sampling for confidence intervals and report the number of independent groups. The five pilot sources offer limited support for model rankings.
 
-## 4. 基线与解释
+Award 1 to a fully expressed and evidence-consistent key point, 0.5 to a partly correct or vague one, and 0 to a missing or wrong one. Accept equivalent wording. Reversing a speaker's stance, dropping a key negation, or inventing a causal claim counts as a material contradiction. Speaker identity and time are scored separately. A formal evaluation should use blinded reviewers or a calibrated grading process with sampled human checks. The scorer accepts a JSONL file of human judgments.
 
-当前两条可复现基线都固定猜 `spk_01`，只使用片段时长；一条给整段，另一条给中间 20%。默认在 18 道文本对齐题上：
+## 4. Baselines
 
-| 基线 | Speaker Accuracy | Mean tIoU | Speaker + Time |
+Both baselines always predict `spk_01` and use only the clip duration. One predicts the entire clip and the other predicts its middle 20%. Results below use the 18 items with text-aligned references.
+
+| Baseline | Speaker Accuracy | Mean tIoU | Speaker + Time |
 | --- | ---: | ---: | ---: |
-| 固定首位 + 整段 | 38.89% | 0.3043 | 16.67% |
-| 固定首位 + 中间 20% | 38.89% | 0.1098 | 0.00% |
+| First speaker and entire clip | 38.89% | 0.3043 | 16.67% |
+| First speaker and middle 20% | 38.89% | 0.1098 | 0.00% |
 
-两条基线未听音频，也没有给出内容答案。整段能碰中较长轮次，正说明正式版应补充最小证据、短段切片、语义与定位联合分。下一步用同一切分跑转录检索基线和真实 audio-only 模型，并区分「归因错但内容对」「内容对但证据错」「证据正确但回答不完整」。
+These baselines leave the free-text answer blank. An entire-clip prediction can score on long turns. Short-evidence breakdowns and joint scoring help detect this effect. Future runs can compare transcript retrieval with audio-only models on the same split and report failures in speaker attribution, answer meaning, and evidence localization.
 
-## 5. 发布金标的条件
+## 5. Gold release criteria
 
-1. 找到准确剪辑版本，记录原视频起点与本地文件 SHA-256；完成全部待回听项。
-2. 所有金标题双人独立试听、核对语义和最小时间证据；有分歧的留仲裁记录。
-3. 对跨源重复、说话人和节目重合、题目泄漏进行检查，冻结可用切分。
-4. 数据、媒体或访问方式有明确许可，评测方可复核，排行榜只使用独立保留集。
-5. 发布代码、Schema、数据卡、评测命令、基线、类别与题型分布，并固定版本与哈希。
+1. Verify each clip version, its source offset, and its local SHA-256. Resolve priority audio review findings.
+2. Have two reviewers independently verify meaning and minimal evidence for each gold item. Record any adjudication.
+3. Check duplicates, overlap, shared speakers and programs, and answer leakage. Freeze the splits.
+4. Document data and media permissions and how evaluators can replay the evidence. Use only the held-out test set for any leaderboard.
+5. Publish the schemas, data card, evaluation commands, baselines, topic and item distributions, and a fixed version and commit hash.
 
-时间定位参考 [Ego4D Episodic Memory](https://ego4d-data.org/docs/benchmarks/episodic-memory/) 的语言查询任务；说话人分离与归因转录的区别可参考 [NIST Rich Transcription](https://www.nist.gov/publications/rich-transcription-2007-meeting-recognition-evaluation)。本项目的联合分和多段评分口径以本协议为准。
+For related temporal localization and speaker attribution tasks, see [Ego4D Episodic Memory](https://ego4d-data.org/docs/benchmarks/episodic-memory/) and [NIST Rich Transcription](https://www.nist.gov/publications/rich-transcription-2007-meeting-recognition-evaluation).

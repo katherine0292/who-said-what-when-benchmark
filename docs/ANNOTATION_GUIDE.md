@@ -1,47 +1,47 @@
-# 标注手册｜从采样到验收
+# Annotation Handbook
 
-## 1. 选片与一级主题
+## 1. Select clips and assign a topic
 
-1. 给原视频建唯一 `source_id`。记录节目、集次、URL、片段在原视频中的起止时间、媒体文件校验值和来源授权状态。
-2. 优先选 3–10 分钟、至少 2 位可区分说话人的自然对话。片段应有可独立理解的观点或问题及上下文。原材料的「每约 15 分钟取 1 段」「证据前后各留约 30 秒」可作抽样参考，不能取代信息密度和对话边界判断。
-3. 剪辑从自然停顿或换人附近起止。抽取后分别确认音频长度、片段开头与原视频时轴的实际对应；有片头、广告、剪辑、静音补偿或重编码差异时单独记录。不要通过改动时间数字来使两套时钟看起来相等。
-4. 每段选一个一级主题：Science & Technology、Finance、Entertainment、Current Affairs & News、Sports、Health & Fitness、Education & Knowledge、Lifestyle & Daily。遇到跨领域，用对话主问题决定一级类，用一句话主题补足。主题只用于组织和切片，不送入音频主评测。
+1. Assign a stable `source_id` to each original video. Record the program, episode, URL, source start and end times, media checksum, and permission status.
+2. Prefer natural conversations of 3 to 10 minutes with at least two distinguishable speakers. Each clip should contain a point or question that listeners can understand in context. Sampling about one clip per 15 minutes and retaining about 30 seconds of surrounding context are starting points. Prioritize meaningful content and natural conversation boundaries.
+3. Cut near a natural pause or speaker change. Verify the extracted audio duration and align its opening to the source video. Record any intro, ad, edit, added silence, or encoding discrepancy. Preserve both clocks until the source alignment is verified.
+4. Assign one primary category from Science & Technology, Finance, Entertainment, Current Affairs & News, Sports, Health & Fitness, Education & Knowledge, or Lifestyle & Daily. If several categories apply, use the conversation's central question to choose one and capture additional context in a one-sentence topic. Categories are used for organization and reporting.
 
-## 2. 第一轮：逐轮标注
+## 2. Round 1 | Annotate turns
 
-| 字段 | 必须做到 | 常见错误 |
+| Field | Requirement | Common error |
 | --- | --- | --- |
-| 片段 ID 与说话人 ID | 片段 ID 稳定；按片段内首次可确认发言分配 `spk_01`、`spk_02` 等；同一人在整段保持同一 ID | 用同一个视频号指代多个切片；把引语中的人当作说话人 |
-| 姓名、角色 | 姓名和节目角色从片头自我介绍、官方节目页或经人工核实的来源记录，含来源与核对状态；未知填空值 | 仅凭声音、面孔或模型猜测姓名、职业 |
-| 轮次 | 以连续发言为主；换人切分。连续长发言可在语义边界拆分，仍保持同一 speaker ID | 一段同时标两个人；把背景音或鼓掌当作说话人 |
-| 起止 | 片段时钟以本地音频第一采样点为 0；毫秒整数，区间 `[start_ms,end_ms)`；新标注建议用 100 ms 级播放定位 | 把原视频时间写入片段；强行让最后一句到片尾 |
-| 转录 | 按原语种，保留有意义的重复、否定、语气词；用 `[inaudible]` 标示不清楚，不补写听不到的词；逐轮记录 | 翻译代替原文；把主持人的复述抄进嘉宾轮次 |
-| 内容与立场 | 用一句话概括当前轮次的实际断言、疑问、建议或反驳；标记引用关系，区分话语者与被提及者 | 将提问写成赞同；把嘉宾说法写成既定事实 |
-| 声音与语气 | 按相对音量、音色、韵律、语速/节奏描述可听特征；证据不足记 `unknown`；口音仅作可选听感 | 把年龄、族裔、国籍或身份从音色推断出来；把叙述内容当语气 |
+| Clip and speaker IDs | Use a stable clip ID. Assign `spk_01`, `spk_02`, and so on by first identifiable speech in the clip. Reuse the same ID when a speaker returns. | Reusing a source video ID for several clips or attributing a quotation to the person being quoted |
+| Names and roles | Verify names and program roles through an audible introduction, an official program page, or another reviewed source. Record the source and verification status. Use a null value when identity is unknown. | Inferring a name or profession from voice, appearance, or a model's guess |
+| Turns | Start a new turn when the speaker changes. Long contributions may be split at a meaningful boundary while retaining the same speaker ID. | Assigning a single turn to two speakers or counting applause as speech |
+| Timing | Set the first sample of the local audio to 0. Use integer milliseconds and half-open intervals `[start_ms, end_ms)`. For new labels, aim to locate boundaries to the nearest 100 ms when the audio permits. | Using the source video clock or extending the last turn to cover trailing silence |
+| Transcript | Keep the original spoken language and meaningful hesitations, repetitions, and negation. Mark unclear speech as `[inaudible]`. | Replacing speech with a translation or copying a host's paraphrase into the guest's turn |
+| Meaning and stance | Summarize the actual claim, question, suggestion, or disagreement. Distinguish the speaker from the person they mention or quote. | Turning a question into an endorsement or presenting an interviewee's claim as verified fact |
+| Voice and delivery | Describe audible timbre, prosody, relative loudness, and pace or rhythm. Use `unknown` for insufficient evidence. Accent impressions are optional. | Guessing age, ethnicity, nationality, or identity from vocal traits |
 
-真正的同时说话允许轮次时间重叠，并分别记录两位发言者。笑声、掌声、背景音乐、空白等可作为非言语事件，勿冒充转录；最后一条发言到尾部之间有静音不必填满。若证据主要来自不可辨识的重叠发言，降级到难例复核，必要时排除。音频听得见的笑声可支持感知语气；画面动作、神态和字幕不能作为 audio-only 答案依据。
+When speakers overlap, give each a separate turn with its actual boundaries. Laughter, applause, music, and silence may be logged as non-speech events. Preserve a gap for silence at the end of a clip. Flag difficult overlaps for review and exclude an item if the necessary evidence remains unintelligible. Audible laughter can support a delivery label. Visual gestures, facial expressions, and captions are outside the audio-only condition.
 
-**语气标签建议。** 先听实际表现，再选 `neutral`、`animated`、`warm`、`encouraging`、`explanatory`、`reflective`、`concerned`、`inquiring`、`emphatic` 或 `unknown`。比如「谈到失败」未必担忧；若句末明显上扬且在追问，可标 `inquiring`，并写下对应声学线索。过于相近或混合时标 `unknown`，由双人校准后才决定是否单独评分。
+Choose a perceived delivery label after listening. Available labels are `neutral`, `animated`, `warm`, `encouraging`, `explanatory`, `reflective`, `concerned`, `inquiring`, `emphatic`, and `unknown`. A rising pitch during a follow-up can support `inquiring`. A discussion of failure alone gives little information about delivery. Record the audible cue and use `unknown` when cues conflict or the delivery is mixed. Calibrate annotators before scoring delivery.
 
-## 3. 第二轮：出题与证据
+## 3. Round 2 | Write questions and link evidence
 
-1. 每段先独立听一遍，用自然语言问「谁谈到 X、具体观点是什么、什么时候说的」。问题可以包含检索线索 X，但不要透露人名、正确观点、具体时间或整个逐字答案。例：问「谁解释了为什么这家店让不同顾客感到平等？什么时候说的？」避免问「谁说不论身家都坐同一个吧台？」后者已写出一个关键点。
-2. 只出一个明确的目标说话人；同一人跨轮解释时，列出全部必要轮次。不连续证据用多个区间；相邻的同一人连续证据可以合并。别因为一句插话夹在中间，就把别人的整段发言纳入证据。若两位都给出了等价答案，重写线索或标作歧义题并剔除。
-3. 写 1–4 条简洁、可逐项判断的答案要点。保留条件、否定和因果方向；允许语义同义改写。逐字引用仅用于必须复述原句的题，且需核对实际听见的话。为每个要点在审核记录中指明最小支持范围。
-4. `identity_ref` 只记录经核查的身份，服务于提供名单的扩展赛道。主赛道的 Who 是片段内说话人 ID。`voice_ref` 只记录可听描述，独立于身份。问题若已给出情绪，不能把该情绪当成该题的答案或同一输入条件下的模型成绩；如做语气分轨，另写盲测问题。
-5. 一题可以落在一个轮次里，但当该轮次很长，验收时缩到足以证明要点的发言范围。迁移版沿用整轮旧时间并保留秒级精度；不能据此称为词级定位。禁止为了提高得分把证据扩到整个 clip。
+1. Listen to the full clip. Write a natural question that asks who addressed a topic, what they said, and when they said it. Use a topic clue and withhold the speaker's name, key answer points, exact times, and verbatim answer. For example, ask who explained why a diner makes customers feel equal and what reason they gave. Save the detail about sharing the same counter for the reference.
+2. Target one clearly identifiable speaker. If the explanation spans multiple turns, link every necessary turn. Record distinct intervals when the evidence is separated. Adjacent evidence from the same speaker can be merged. Exclude intervening speech when it contributes no evidence. If two people give equivalent answers, rewrite the question to distinguish them or exclude it as ambiguous.
+3. Write one to four concise, independently assessable key points. Preserve qualifiers, negation, and causal direction. Accept equivalent paraphrases. Use a quotation when the question calls for exact wording and verify it against the audio. Record the smallest supporting interval for each point in the review log.
+4. Keep the speaker ID as the main task's answer to “who.” Store verified names and roles in `identity_ref` for the roster-based track, and audible traits in `voice_ref`. Questions used to assess delivery should withhold the target delivery label.
+5. Within a long turn, select the shortest complete utterance that establishes the answer. The pilot uses legacy turn boundaries with one-second resolution. Future review should refine these boundaries where the evidence occupies a shorter passage.
 
-**边界例子。** 若 A 在 10–26 秒解释「处境不能改变」，B 在 26–27 秒应和，A 在 27–59 秒说「问题有可行方案」，答案为 A，证据 `[[10000,26000],[27000,59000]]`。若 B 的插话也补足题意，应改写为多说话人问题或移出本版单说话人赛道。只问第一部分时，不保留后段。
+For example, Speaker A explains at 10–26 seconds that a situation cannot be changed. Speaker B interjects at 26–27 seconds. Speaker A adds at 27–59 seconds that a problem has a solution. A question asking for the distinction targets A and uses `[[10000, 26000], [27000, 59000]]`. A question about the first point alone uses the first interval. If B supplies part of the necessary answer, revise the item or reserve it for a track that supports multiple target speakers.
 
-## 4. 双人复核与验收
+## 4. Independent review and acceptance
 
-| 阶段 | 谁做什么 | 通过条件 |
+| Stage | Procedure | Acceptance criterion |
 | --- | --- | --- |
-| 校准 | 两名标注员独立完成同一批含短问答、长轮次、插话和多人样本的试标 | 逐条讨论分歧，更新同一版手册；保留各自初稿 |
-| 核对 | 标注员 A 建轮次和题；复核员 B 不看答案先独立作答和定位，再对照稿件 | 对人、要点、证据完整性和时钟有一致判断；身份附来源 |
-| 仲裁 | 第三人复听争议段，记录旧值、新值、支持证据和原因 | 无法听辨、原视频对应不明、答案不唯一的题不进金标 |
-| 验收 | 检查 JSON、ID 关联、区间、媒体校验值、输入泄漏、分组隔离和授权 | 100% 金标题通过结构与人工验收；保留审核记录 |
+| Calibration | Two annotators independently label a trial batch containing short exchanges, long turns, interruptions, and multiple speakers. | Reconcile differences, update the shared handbook, and retain both first drafts. |
+| Review | Annotator A labels the clip and writes the item. Reviewer B answers and locates evidence independently before seeing the reference. | Both identify the same speaker, key points, and necessary evidence. Identity claims have a recorded source. |
+| Adjudication | A third reviewer listens to disputed segments and records the old label, revised label, evidence, and rationale. | Exclude items with unresolved ambiguity, unintelligible evidence, or uncertain clip alignment from the gold set. |
+| Release checks | Check JSON, IDs, interval bounds, checksums, leakage, grouping, and permissions. | Every gold item passes structural and human review with a retained record. |
 
-推荐先导放行线（需在试标后冻结）：独立说话人一致率 ≥95%；证据中位 tIoU ≥0.80，并报告起止偏差和低分样本；语义要点一致率 ≥90%；可选语气报告 Cohen’s κ、标签分布与不确定率，低一致性时不纳入主分。多区间用时间集合 tIoU；单段另报告边界误差。上述是**拟定的验收线**，当前 25 道未测得这些数值。
+Proposed pilot acceptance thresholds are at least 95% speaker agreement, a median temporal IoU of at least 0.80, and at least 90% agreement on key points. Freeze thresholds after calibration and report boundary errors and low-agreement cases. Use time-set IoU for multi-interval labels and report start and end errors for single intervals. For optional delivery, report Cohen's kappa, the label distribution, and the unknown rate. Defer primary scoring for labels with poor agreement. These thresholds have yet to be measured on the pilot.
 
-每条审核记录至少含 `id`、审核者内部匿名编号、媒体哈希、状态（待审/双审一致/已仲裁/剔除）、问题与要点修订、每个要点的时间证据、分歧原因、日期。模型可起草，不可替代人工试听；不得把模型输出或模型间一致直接当作金标。
+Each review record should include `id`, anonymized reviewer IDs, the media hash, review status, edits to the question and key points, evidence for each point, reasons for disagreements, and the date. Model-generated drafts require independent listening review before acceptance as gold labels.
