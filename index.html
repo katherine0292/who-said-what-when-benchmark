@@ -30,8 +30,10 @@ button{font:inherit;color:inherit;cursor:pointer;background:none;border:0;paddin
 a{color:inherit}
 :focus-visible{outline:2px solid var(--what);outline-offset:3px;border-radius:6px}
 h1,h2,h3,h4,p,ul,ol,figure,dl{margin:0}
-h1,h2,h3{font-weight:300;letter-spacing:-.025em;text-wrap:balance}
-html.zh h1,html.zh h2,html.zh h3{font-weight:400;letter-spacing:-.005em;word-break:keep-all;overflow-wrap:anywhere}
+h1,h2,h3{font-weight:300;letter-spacing:-.025em;white-space:nowrap;text-wrap:nowrap;min-width:0}
+html.zh h1,html.zh h2,html.zh h3{font-weight:400;letter-spacing:-.005em;word-break:normal;overflow-wrap:normal}
+.lbl.k,.pipe .fn b,.tape b,.rules b,.wc>.wh b,.together>.wh b,.mc b,.bl-r b{white-space:nowrap;min-width:0}
+.caption-note{font-size:13px;line-height:1.6;color:var(--ink-2);margin:-2px 0 14px}
 .lbl{display:block;font:500 11px/1.3 var(--m);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
 html.zh .lbl{letter-spacing:.06em}
 .muted{color:var(--ink-2)}.small{font-size:14px}
@@ -123,14 +125,14 @@ code,.mono{font-family:var(--m);font-size:.88em}
 /* ---------------- chapters ---------------- */
 section.ch{position:relative;padding-block:clamp(36px,4.4vw,64px)}
 section.ch.alt{background:var(--paper-2)}
-.head{display:grid;gap:8px;margin-bottom:clamp(18px,2.4vw,30px)}
+.head{display:grid;gap:8px;min-width:0;margin-bottom:clamp(18px,2.4vw,30px)}
 .head .row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .head .no{font:600 12px/1 var(--m);color:var(--ink-3)}
 .wtag{display:inline-flex;gap:5px}
 .wtag i{width:9px;height:9px;border-radius:50%;background:var(--line-2)}
 .wtag i.who.on{background:var(--who)}.wtag i.what.on{background:var(--what)}.wtag i.when.on{background:var(--when)}
-.head h2{font-size:clamp(24px,2.7vw,36px);line-height:1.2;max-width:28ch;position:relative;padding-bottom:14px}
-html.zh .head h2{line-height:1.36;max-width:24em;font-size:clamp(22px,2.4vw,31px)}
+.head h2{font-size:clamp(24px,2.7vw,36px);line-height:1.2;width:100%;position:relative;padding-bottom:14px}
+html.zh .head h2{line-height:1.36;font-size:clamp(22px,2.4vw,31px)}
 .head h2::after{content:"";position:absolute;left:0;bottom:0;height:3px;width:72px;border-radius:2px;background:linear-gradient(90deg,var(--who),var(--what),var(--when));transform-origin:0 50%}
 .js .head h2::after{transform:scaleX(0);transition:transform 1s var(--ease)}
 .js .head.in h2::after{transform:scaleX(1)}
@@ -145,7 +147,7 @@ html.zh .head h2{line-height:1.36;max-width:24em;font-size:clamp(22px,2.4vw,31px
 
 /* intro */
 .intro{padding-top:clamp(28px,3.4vw,48px)}
-.intro h1{font-size:clamp(26px,3.1vw,42px);font-weight:400;line-height:1.2;letter-spacing:-.025em;margin:8px 0 12px;max-width:24em}
+.intro h1{font-size:clamp(26px,3.1vw,42px);font-weight:400;line-height:1.2;letter-spacing:-.025em;margin:8px 0 12px;width:100%}
 html.en .intro h1{font-weight:300}
 .meta2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 clamp(24px,5vw,72px);margin-top:20px}
 .meta2>div{border-top:1px solid var(--line-2);padding:12px 0 16px;min-width:0}
@@ -160,7 +162,7 @@ html.en .intro h1{font-weight:300}
 
 /* why: pipeline + failure diagrams */
 .pipe{display:grid;grid-template-columns:1fr 26px 1fr 26px 1fr;align-items:stretch;gap:0}
-.pipe .fn{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--paper)}
+.pipe .fn{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--paper);min-width:0}
 .pipe .fn i{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--paper);font:600 11px var(--m);font-style:normal;margin-bottom:8px}
 .pipe .fn b{display:block;font-weight:500}
 .pipe .fn p{font-size:13.5px;color:var(--ink-2)}
@@ -248,7 +250,7 @@ th:nth-child(n+2):nth-child(-n+5),td:nth-child(n+2):nth-child(-n+5){text-align:c
 .wcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
 .wc{border-radius:var(--r);padding:16px;background:var(--bgc);border:1px solid color-mix(in srgb,var(--cc) 35%,transparent);min-width:0}
 .wc.who{--cc:var(--who);--bgc:var(--who-s);--ci:var(--who-i)}.wc.what{--cc:var(--what);--bgc:var(--what-s);--ci:var(--what-i)}.wc.when{--cc:var(--when);--bgc:var(--when-s);--ci:var(--when-i)}
-.wc>.wh{display:flex;align-items:baseline;gap:10px;margin-bottom:12px;color:var(--ci)}
+.wc>.wh{display:grid;gap:4px;margin-bottom:12px;color:var(--ci)}
 .wc>.wh b{font-size:22px;font-weight:600;letter-spacing:-.02em}
 .wc>.wh span{font:500 11px var(--m);letter-spacing:.06em;text-transform:uppercase;opacity:.85}
 .mc{background:var(--paper);border-radius:12px;padding:12px 14px;margin-top:8px}
@@ -257,7 +259,7 @@ th:nth-child(n+2):nth-child(-n+5),td:nth-child(n+2):nth-child(-n+5){text-align:c
 .mc .tg{display:inline-block;font:600 10px var(--m);letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:5px;margin-bottom:6px;background:var(--line);color:var(--ink-2)}
 .mc .tg.h{background:var(--when-s);color:var(--when-i)}.mc .tg.a{background:var(--what-s);color:var(--what-i)}
 .together{margin-top:12px;border-radius:var(--r);padding:16px;background:linear-gradient(100deg,var(--who-s),var(--what-s),var(--when-s));border:1px solid var(--line)}
-.together>.wh{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.together>.wh{display:grid;gap:4px;margin-bottom:10px}
 .together>.wh b{font-size:20px;font-weight:600;letter-spacing:-.02em}
 .together>.wh span{font:500 11px var(--m);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
 .together .tgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
@@ -289,7 +291,7 @@ th:nth-child(n+2):nth-child(-n+5),td:nth-child(n+2):nth-child(-n+5){text-align:c
 .vld{text-align:center;margin-top:10px;font-size:13px;color:var(--ok)}.vld.bad{color:var(--bad)}
 /* baselines */
 .bl-g{display:grid;gap:16px}
-.bl-r b{font-weight:500;font-size:14px}
+.bl-r b{display:block;font-weight:500;font-size:14px}
 .bl-r .pair{display:grid;gap:5px;margin-top:6px}
 .bl-r .bar{display:grid;grid-template-columns:minmax(0,1fr) 64px;align-items:center;gap:10px}
 .bl-r .tk{height:10px;border-radius:6px;background:var(--line);overflow:hidden}
@@ -340,7 +342,8 @@ th:nth-child(n+2):nth-child(-n+5),td:nth-child(n+2):nth-child(-n+5){text-align:c
 .term .chips .chip{background:transparent;color:var(--studio-ink);border-color:var(--studio-line);font-size:12.5px}
 .cur{display:inline-block;width:8px;height:15px;background:var(--what);vertical-align:-2px;animation:cur 1s steps(1) infinite}
 @keyframes cur{50%{opacity:0}}
-.big{font-size:clamp(48px,10vw,150px);font-weight:600;letter-spacing:-.05em;line-height:1.05;text-align:center;padding:clamp(24px,4vw,48px) 0 6px;display:flex;justify-content:center;flex-wrap:wrap;gap:0 .24em}
+.big{font-size:clamp(48px,10vw,150px);font-weight:600;letter-spacing:-.05em;line-height:1.05;text-align:center;padding:clamp(24px,4vw,48px) 0 6px;display:flex;justify-content:center;flex-wrap:nowrap;gap:0 .24em;white-space:nowrap}
+.big span{flex-shrink:0}
 .big span:nth-child(1){color:var(--who)}.big span:nth-child(2){color:var(--what)}.big span:nth-child(3){color:var(--when)}
 footer{padding-block:24px 36px;border-top:1px solid var(--line)}
 footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center}
@@ -485,7 +488,7 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
     <div class="io-mid"><b data-k="tk.model"></b><span class="wire"><i></i><i></i><i></i></span></div>
     <div class="io-box out"><span class="lbl" data-k="tk.out.k"></span><ul><li data-k="tk.out1"></li><li data-k="tk.out2"></li><li data-k="tk.out3"></li></ul></div>
   </div>
-  <div class="blk"><span class="lbl k" data-k="tk.json.k"></span>
+  <div class="blk"><span class="lbl k" data-k="tk.json.k"></span><p class="caption-note" data-k="tk.json.note"></p>
 <pre class="code"><code><span class="c-p">{</span>
   <span class="c-k">"id"</span>: <span class="c-s">"wsw_0018"</span>,
   <span class="c-k">"speaker_id"</span>: <span class="c-s">"spk_02"</span>,
@@ -605,7 +608,7 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
     <div><b class="num" data-c="18">18</b><p data-k="ql.n3"></p></div>
   </div>
   <div class="g2 blk" style="align-items:start">
-    <div class="card"><span class="lbl k" data-k="ql.dc.k"></span>
+    <div class="card"><span class="lbl k" data-k="ql.dc.k"></span><p class="caption-note" data-k="ql.dc.unit"></p>
       <div class="db-leg"><span><i style="background:var(--who)"></i><span data-k="ql.dc.l1"></span></span><span><i style="background:var(--what)"></i><span data-k="ql.dc.l2"></span></span></div>
       <div class="db" id="db"></div><p class="muted small" style="margin-top:14px" data-k="ql.dc.note"></p></div>
     <div class="card"><span class="lbl k" data-k="ql.f.k"></span><ul class="ethic"><li data-k="ql.f1"></li><li data-k="ql.f2"></li><li data-k="ql.f3"></li><li data-k="ql.f4"></li></ul></div>
@@ -624,7 +627,7 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
     <div><i>5</i><p data-k="rm.g5"></p><em data-k="rm.open"></em></div>
   </div>
   <div class="g2 blk" style="align-items:start">
-    <div class="card"><span class="lbl k" data-k="rm.th.k"></span>
+    <div class="card"><span class="lbl k" data-k="rm.th.k"></span><p class="caption-note" data-k="rm.th.note"></p>
       <div class="gauges">
         <div class="gz"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="bgc" cx="60" cy="60" r="50"/><circle class="tg" cx="60" cy="60" r="50" style="--p:.95"/></svg><b>≥ 95%</b><span data-k="rm.th1"></span></div>
         <div class="gz"><svg viewBox="0 0 120 120" aria-hidden="true"><circle class="bgc" cx="60" cy="60" r="50"/><circle class="tg" cx="60" cy="60" r="50" style="--p:.8"/></svg><b>≥ 0.80</b><span data-k="rm.th2"></span></div>
@@ -673,6 +676,15 @@ var SRC=['#14A89C','#5B7CFA','#F29A2E','#B26AD9','#E2677A'];
 document.documentElement.classList.add('js');
 /* extra copy for the rebuilt page */
 Object.assign(COPY,{
+ 'tk.json.k':['预测示例','Example prediction'],
+ 'tk.json.note':['示例包含两个不连续的证据时间段。','Illustrative output with two separate evidence intervals.'],
+ 'da.bc.k':['按源视频分组的片段时长','Clip duration by source'],
+ 'ql.dc.k':['源标注与本地音频时长','Source vs. local duration'],
+ 'ql.dc.unit':['单位：秒。','Durations in seconds.'],
+ 'rm.th.k':['拟定的发布门槛','Proposed release thresholds'],
+ 'rm.th.note':['规划门槛，尚未在试点上测量。','Planning targets; not yet measured on the pilot.'],
+ 'rm.sp.k':['拟扩展至 800 题的划分','Proposed 800-item split'],
+ 'bl.k':['诊断基线','Diagnostic baselines'],
  'nav.hero':['标注台','Studio'],
  'ui.menu':['目录','Menu'],'ui.play':['播放','Play'],'ui.pause':['暂停','Pause'],
  'hs.whatv':['自由文本答案','Free-text answer'],'hs.whatl':['含义由人工按要点打分','Meaning graded by humans, key by key'],
@@ -688,6 +700,27 @@ var lang='en';
 try{var sv=localStorage.getItem('wswPreferredLanguage');if(sv==='en'||sv==='zh')lang=sv}catch(e){}
 function t(k){var c=COPY[k];return c?c[lang==='zh'?0:1]:k}
 var listeners=[];
+var titleSelector='h1:not(.sr-only),h2,h3,.lbl.k,.pipe .fn b,.tape b,.rules b,.wc>.wh b,.together>.wh b,.mc b,.bl-r b,.big';
+var titleFrame=0;
+function fitTitles(){
+  var titles=$$(titleSelector);
+  titles.forEach(function(node){node.style.removeProperty('font-size')});
+  titles.forEach(function(node){
+    var style=getComputedStyle(node),padding=parseFloat(style.paddingLeft)+parseFloat(style.paddingRight);
+    var available=node.clientWidth-padding;
+    if(available<=0)return;
+    var range=document.createRange();range.selectNodeContents(node);
+    for(var attempt=0;attempt<3&&range.getBoundingClientRect().width>available;attempt++){
+      var size=parseFloat(getComputedStyle(node).fontSize);
+      var next=Math.floor(size*(available-1)/range.getBoundingClientRect().width*100)/100;
+      node.style.fontSize=Math.max(1,next)+'px';
+    }
+  });
+}
+function scheduleTitleFit(){
+  cancelAnimationFrame(titleFrame);
+  titleFrame=requestAnimationFrame(fitTitles);
+}
 function setLang(l,remember){
   lang=l;document.documentElement.lang=l==='zh'?'zh-CN':'en';document.documentElement.classList.toggle('zh',l==='zh');document.documentElement.classList.toggle('en',l==='en');
   $$('[data-k]').forEach(function(n){n.textContent=t(n.dataset.k)});
@@ -695,6 +728,7 @@ function setLang(l,remember){
   if(remember){try{localStorage.setItem('wswPreferredLanguage',l)}catch(e){}}
   listeners.forEach(function(f){f()});
   document.title=l==='zh'?'谁在什么时候说了什么':'Who Said What When';
+  fitTitles();
 }
 function fmt(ms){var s=Math.floor(ms/1000),m=Math.floor(s/60);return m+':'+String(s%60).padStart(2,'0')}
 function fmt1(s){return s.toFixed(1)}
@@ -817,7 +851,7 @@ function onScroll(){
   var hero=$('#hero').getBoundingClientRect();
   railEl.classList.toggle('away',hero.bottom>innerHeight*.55);
 }
-addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',function(){buildHero();onScroll()});
+addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',function(){buildHero();onScroll();scheduleTitleFit()});
 function ribbonSeek(e){
   var r=ribbon.getBoundingClientRect(),p=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width));
   var h=document.documentElement;scrollTo({top:p*(h.scrollHeight-innerHeight),behavior:'auto'});
@@ -932,5 +966,6 @@ if(FINE&&!RM){
 /* ---------- init ---------- */
 $$('.langs button').forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.l,true)})});
 setLang(lang);buildChips();buildHero();sizeEv();setPlay();onScroll();requestAnimationFrame(frame);
+if(document.fonts){document.fonts.ready.then(scheduleTitleFit);document.fonts.addEventListener('loadingdone',scheduleTitleFit)}
 })();
 </script></body></html>
