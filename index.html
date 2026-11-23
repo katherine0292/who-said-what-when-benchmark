@@ -407,6 +407,10 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
   html{scroll-behavior:auto}
   #cdot,#chair,#cping{display:none}
 }
+
+/* Compact chapter spacing; original benchmark content and controls are retained. */
+section.ch{padding-block:clamp(36px,4vw,56px)}
+@media(max-width:760px){section.ch{padding-block:28px}}
 </style></head><body>
 <header class="top"><div class="in">
   <button class="menu-btn" id="menuBtn" aria-label="Menu"><i><b></b><b></b></i><span data-k="ui.menu"></span></button>
