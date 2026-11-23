@@ -1,6 +1,7 @@
 <!doctype html><html lang="en" class="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Who Said What When</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500&display=swap">
-<style>/* Layout: a paper sheet with a fixed chapter rail and a corpus dock. Three colours carry the whole system: Who (blue), What (teal), When (amber). The illustrated cover introduces the audio-annotation studio. */
+<style>
+/* Layout: a paper sheet with a fixed chapter rail and a corpus dock. Three colours carry the whole system: Who (blue), What (teal), When (amber). The illustrated cover introduces the audio-annotation studio. */
 :root{
   --bg:#E9EDEE; --paper:#FFFFFF; --paper-2:#F5F7F7; --ink:#0E191B; --ink-2:#4B5B5E; --ink-3:#889698; --line:#DFE5E6; --line-2:#C9D2D4;
   --who:#5B7CFA; --what:#14A89C; --when:#F29A2E;
@@ -407,7 +408,20 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
   html{scroll-behavior:auto}
   #cdot,#chair,#cping{display:none}
 }
+
+/* Portfolio reading layer. Existing studio, charts and mobile title fitting are retained. */
+.evidence-detail{margin-top:20px;border:1px solid var(--line);border-radius:16px;background:var(--paper)}
+.evidence-detail>summary{padding:17px 20px;cursor:pointer;font-size:16px;line-height:1.5;font-weight:500;overflow-wrap:anywhere}
+.evidence-detail[open]>summary{border-bottom:1px solid var(--line)}.detail-body{padding:20px;min-width:0}.detail-body>.blk:first-child{margin-top:0}
+.editorial-note{font-size:16px;line-height:1.7;max-width:75ch;margin-top:24px;color:var(--ink-2)}
+.pilot-status{display:grid;grid-template-columns:1fr 1fr;gap:18px}.release-note strong{display:block;font-size:36px;font-weight:300;margin-bottom:12px;color:var(--when-i)}.release-note p{font-size:16px;line-height:1.65}
+.edit-tape{grid-template-columns:repeat(2,minmax(0,1fr))}.edit-tape p{font-size:15px}.audit-example{margin-top:26px;padding:24px;border:1px solid var(--line);border-radius:18px;background:var(--paper-2)}.audit-example h3{font-size:24px;margin:12px 0 16px}.audit-example p{font-size:16px;line-height:1.65}.audit-example .small{font-size:14px}
+.interval-example{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:20px 0}.interval-example code{padding:8px 12px;border-radius:8px;background:var(--when-s);color:var(--when-i)}.interval-example span{font-size:13px;color:var(--ink-2)}
+.audit-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}.audit-steps .lbl{margin-bottom:10px}
+@media(max-width:760px){.pilot-status,.audit-steps,.edit-tape{grid-template-columns:1fr}.detail-body{padding:16px}.evidence-detail>summary{padding:16px}.audit-example{padding:20px}.audit-example h3{font-size:22px}}
+
 </style></head><body>
+
 <header class="top"><div class="in">
   <button class="menu-btn" id="menuBtn" aria-label="Menu"><i><b></b><b></b></i><span data-k="ui.menu"></span></button>
   <a class="word" href="#hero" aria-label="Who What When"><b>WHO</b><b>WHAT</b><b>WHEN</b></a>
@@ -444,7 +458,6 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
   </div>
 </section>
 
-<!-- overview -->
 <section class="ch intro" id="c-overview" data-nav="nav.ov"><div class="wrap">
   <div class="head"><div class="row"><span class="no">01</span><span class="lbl" data-k="nav.ov"></span><span class="wtag"><i class="who on"></i><i class="what on"></i><i class="when on"></i></span></div>
     <h1 data-k="hero.title"></h1><p class="lede" data-k="hero.sub"></p></div>
@@ -462,9 +475,11 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
   </div>
 </div></section>
 
-<!-- why -->
-<section class="ch alt" id="c-why" data-nav="nav.wh"><div class="wrap">
-  <div class="head"><div class="row"><span class="no">02</span><span class="lbl" data-k="wh.label"></span></div><h2 data-k="wh.title"></h2><p class="lede" data-k="wh.lede"></p></div>
+<section class="ch alt" id="c-task" data-nav="nav.tk"><div class="wrap"><div class="head"><div class="row"><span class="no">02</span><span class="lbl" data-k="nav.tk"></span></div><h2 data-k="edit.task.title"></h2><p class="lede" data-k="edit.task.lede"></p></div><span id="c-why"></span><div class="io">
+    <div class="io-box"><span class="lbl" data-k="tk.in.k"></span><ul><li data-k="tk.in1"></li><li data-k="tk.in2"></li><li data-k="tk.in3"></li><li data-k="tk.in4"></li></ul></div>
+    <div class="io-mid"><b data-k="tk.model"></b><span class="wire"><i></i><i></i><i></i></span></div>
+    <div class="io-box out"><span class="lbl" data-k="tk.out.k"></span><ul><li data-k="tk.out1"></li><li data-k="tk.out2"></li><li data-k="tk.out3"></li></ul></div>
+  </div><p class="editorial-note" data-k="edit.task.decision"></p><details class="evidence-detail"><summary data-k="edit.task.more"></summary><div class="detail-body">
   <span class="lbl k" data-k="wh.flow.k"></span>
   <div class="pipe">
     <div class="fn"><i>1</i><b data-k="wh.f1.t"></b><p data-k="wh.f1.d"></p></div><i class="fa">→</i>
@@ -478,16 +493,8 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
     <div class="fc"><svg viewBox="0 0 200 56" aria-hidden="true"><rect x="0" y="20" width="200" height="16" rx="5" fill="var(--line)"/><rect x="24" y="20" width="50" height="16" rx="5" fill="var(--when)"/><path d="M150 8v40" stroke="var(--bad)" stroke-width="2.5" stroke-dasharray="4 3"/><circle cx="150" cy="8" r="4" fill="var(--bad)"/></svg><span class="fi">W3</span><h3 data-k="wh.c3.t"></h3><p data-k="wh.c3.d"></p><small data-k="wh.c3.k"></small><em data-k="wh.c3.u"></em></div>
     <div class="fc"><svg viewBox="0 0 200 56" aria-hidden="true"><path d="M0 28 Q12 4 24 28 T48 28 T72 28 T96 28 T120 28 T144 28 T168 28 T192 28" fill="none" stroke="var(--ink-3)" stroke-width="2"/><rect x="132" y="16" width="64" height="24" rx="12" fill="none" stroke="var(--bad)" stroke-width="2" stroke-dasharray="4 3"/><text x="164" y="29" font-size="11" fill="var(--bad)" text-anchor="middle" dominant-baseline="central">sad?</text></svg><span class="fi">W4</span><h3 data-k="wh.c4.t"></h3><p data-k="wh.c4.d"></p><small data-k="wh.c4.k"></small><em data-k="wh.c4.u"></em></div>
   </div>
-</div></section>
 
-<!-- task -->
-<section class="ch" id="c-task" data-nav="nav.tk"><div class="wrap">
-  <div class="head"><div class="row"><span class="no">03</span><span class="lbl" data-k="tk.label"></span></div><h2 data-k="tk.title"></h2><p class="lede" data-k="tk.lede"></p></div>
-  <div class="io">
-    <div class="io-box"><span class="lbl" data-k="tk.in.k"></span><ul><li data-k="tk.in1"></li><li data-k="tk.in2"></li><li data-k="tk.in3"></li><li data-k="tk.in4"></li></ul></div>
-    <div class="io-mid"><b data-k="tk.model"></b><span class="wire"><i></i><i></i><i></i></span></div>
-    <div class="io-box out"><span class="lbl" data-k="tk.out.k"></span><ul><li data-k="tk.out1"></li><li data-k="tk.out2"></li><li data-k="tk.out3"></li></ul></div>
-  </div>
+
   <div class="blk"><span class="lbl k" data-k="tk.json.k"></span><p class="caption-note" data-k="tk.json.note"></p>
 <pre class="code"><code><span class="c-p">{</span>
   <span class="c-k">"id"</span>: <span class="c-s">"wsw_0018"</span>,
@@ -505,18 +512,16 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
       <tr><td data-k="tk.cd4.n"></td><td class="y"><i></i></td><td></td><td class="y"><i></i></td><td class="y"><i></i></td><td data-k="tk.cd4.p"></td></tr>
       <tr><td data-k="tk.cd5.n"></td><td class="y"><i></i></td><td></td><td class="y"><i></i></td><td></td><td data-k="tk.cd5.p"></td></tr>
     </tbody></table></div></div>
-</div></section>
+</div></details></div></section>
 
-<!-- data -->
-<section class="ch alt" id="c-data" data-nav="nav.da"><div class="wrap">
-  <div class="head"><div class="row"><span class="no">04</span><span class="lbl" data-k="da.label"></span></div><h2 data-k="da.title"></h2><p class="lede" data-k="da.lede"></p></div>
+<section class="ch" id="c-data" data-nav="nav.da"><div class="wrap"><div class="head"><div class="row"><span class="no">03</span><span class="lbl" data-k="nav.da"></span></div><h2 data-k="da.title"></h2><p class="lede" data-k="edit.data.lede"></p></div><div class="pilot-status"><div class="card"><span class="lbl k" data-k="da.st.k"></span>
+      <div class="donut-wrap"><div class="donut"><b class="num">18<small>/25</small></b></div>
+        <ul class="dl2"><li><i></i><span data-k="da.st1"></span><b>18</b></li><li><i class="d2"></i><span data-k="da.st2"></span><b>7</b></li></ul></div>
+      </div><div class="card release-note"><strong>0 gold</strong><p data-k="edit.data.status"></p></div></div><details class="evidence-detail"><summary data-k="edit.data.more"></summary><div class="detail-body">
   <div class="card"><span class="lbl k" data-k="da.bc.k"></span><div class="gantt" id="gantt"></div>
     <div class="gleg"><span id="gleg" style="display:contents"></span><span><i class="h"></i><em style="font-style:normal" data-k="da.bc.leg"></em></span></div></div>
   <div class="dgrid">
-    <div class="card"><span class="lbl k" data-k="da.st.k"></span>
-      <div class="donut-wrap"><div class="donut"><b class="num">18<small>/25</small></b></div>
-        <ul class="dl2"><li><i></i><span data-k="da.st1"></span><b>18</b></li><li><i class="d2"></i><span data-k="da.st2"></span><b>7</b></li></ul></div>
-      <span class="lbl k" style="margin-top:20px" data-k="da.cat.k"></span>
+    <div class="card"><span class="lbl k" style="margin-top:20px" data-k="da.cat.k"></span>
       <div class="stack"><i style="--w:92%" class="s1"></i><i style="--w:8%" class="s2"></i></div>
       <ul class="dl2"><li><i></i><span data-k="da.cat1"></span><b>23</b></li><li><i class="d2"></i><span data-k="da.cat2"></span><b>2</b></li></ul>
       <span class="lbl k" style="margin-top:20px" data-k="da.spk.k"></span>
@@ -528,11 +533,9 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
       <div class="card"><span class="lbl k" data-k="da.topics.k"></span><div class="chips"><span class="chip" data-k="da.t1"></span><span class="chip" data-k="da.t2"></span><span class="chip" data-k="da.t3"></span><span class="chip" data-k="da.t4"></span><span class="chip" data-k="da.t5"></span></div></div>
     </div>
   </div>
-</div></section>
+</div></details></div></section>
 
-<!-- annotation -->
-<section class="ch" id="c-annotation" data-nav="nav.an"><div class="wrap">
-  <div class="head"><div class="row"><span class="no">05</span><span class="lbl" data-k="an.label"></span></div><h2 data-k="an.title"></h2><p class="lede" data-k="an.lede"></p></div>
+<section class="ch alt" id="c-annotation" data-nav="nav.an"><div class="wrap"><div class="head"><div class="row"><span class="no">04</span><span class="lbl" data-k="nav.an"></span></div><h2 data-k="edit.an.title"></h2><p class="lede" data-k="edit.an.lede"></p></div><div class="tape edit-tape"><div class="done"><i></i><b data-k="an.s1.t"></b><em data-k="an.done"></em><p data-k="an.s1.d"></p></div><div class="done"><i></i><b data-k="an.s2.t"></b><em data-k="an.done"></em><p data-k="an.s2.d"></p></div></div><p class="editorial-note" data-k="edit.an.separation"></p><article class="audit-example"><span class="lbl">wsw_0014</span><h3 data-k="edit.an.example.t"></h3><p data-k="edit.an.example.d"></p><div class="interval-example"><code>[0, 48000)</code><span data-k="edit.an.example.gap"></span><code>[136000, 190000)</code></div><p class="small muted" data-k="edit.an.example.limit"></p></article><details class="evidence-detail"><summary data-k="edit.an.more"></summary><div class="detail-body">
   <div class="tape">
     <div class="done"><i></i><b data-k="an.s1.t"></b><em data-k="an.done"></em><p data-k="an.s1.d"></p></div>
     <div class="done"><i></i><b data-k="an.s2.t"></b><em data-k="an.done"></em><p data-k="an.s2.d"></p></div>
@@ -550,29 +553,18 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
   <div class="blk"><span class="lbl k" data-k="an.e.k"></span>
   <div class="errs"><span data-k="an.e1"></span><span data-k="an.e2"></span><span data-k="an.e3"></span><span data-k="an.e4"></span></div>
   <p class="muted small" style="margin-top:14px" data-k="an.cal"></p></div>
-</div></section>
+</div></details></div></section>
 
-<!-- scoring -->
-<section class="ch alt" id="c-scoring" data-nav="nav.sc"><div class="wrap">
-  <div class="head"><div class="row"><span class="no">06</span><span class="lbl" data-k="sc.label"></span></div><h2 data-k="sc.title"></h2><p class="lede" data-k="sc.lede"></p></div>
-  <div class="wcols">
+<section class="ch" id="c-scoring" data-nav="nav.sc"><div class="wrap"><div class="head"><div class="row"><span class="no">05</span><span class="lbl" data-k="nav.sc"></span></div><h2 data-k="sc.title"></h2><p class="lede" data-k="sc.lede"></p></div><div class="wcols">
     <div class="wc who"><div class="wh"><b data-k="hs.who"></b><span data-k="sc.who.s"></span></div>
       <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m1.t"></b><p data-k="sc.m1.d"></p></div>
-      <div class="mc"><span class="tg" data-k="sc.opt"></span><b data-k="sc.m7.t"></b><p data-k="sc.m7.d"></p></div></div>
+      </div>
     <div class="wc what"><div class="wh"><b data-k="hs.what"></b><span data-k="sc.what.s"></span></div>
       <div class="mc"><span class="tg h" data-k="sc.human"></span><b data-k="sc.m5.t"></b><p data-k="sc.m5.d"></p></div></div>
     <div class="wc when"><div class="wh"><b data-k="hs.when"></b><span data-k="sc.when.s"></span></div>
       <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m2.t"></b><p data-k="sc.m2.d"></p></div>
-      <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m3.t"></b><p data-k="sc.m3.d"></p></div></div>
-  </div>
-  <div class="together"><div class="wh"><b data-k="sc.joint"></b><span data-k="sc.joint.s"></span></div>
-    <div class="tgrid">
-      <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m4.t"></b><p data-k="sc.m4.d"></p></div>
-      <div class="mc"><span class="tg h" data-k="sc.both"></span><b data-k="sc.m6.t"></b><p data-k="sc.m6.d"></p></div>
-      <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m8.t"></b><p data-k="sc.m8.d"></p></div>
-    </div></div>
-
-  <div class="blk"><div class="card"><span class="lbl k" data-k="lab.k"></span>
+      </div>
+  </div><p class="editorial-note" data-k="edit.sc.joint"></p><div class="blk"><div class="card"><span class="lbl k" data-k="lab.k"></span>
     <p class="muted small" style="margin-bottom:14px" data-k="lab.lede"></p>
     <div class="lab">
       <div>
@@ -589,7 +581,25 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
         <div class="thr" id="thr"><span data-t=".3">≥0.3</span><span data-t=".5">≥0.5</span><span data-t=".7">≥0.7</span></div>
         <p class="vld" id="vld"></p>
       </div>
-    </div></div></div>
+    </div></div></div><p class="editorial-note" data-k="edit.sc.baseline"></p><details class="evidence-detail"><summary data-k="edit.sc.metrics"></summary><div class="detail-body"><div class="wcols">
+    <div class="wc who"><div class="wh"><b data-k="hs.who"></b><span data-k="sc.who.s"></span></div>
+      <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m1.t"></b><p data-k="sc.m1.d"></p></div>
+      <div class="mc"><span class="tg" data-k="sc.opt"></span><b data-k="sc.m7.t"></b><p data-k="sc.m7.d"></p></div></div>
+    <div class="wc what"><div class="wh"><b data-k="hs.what"></b><span data-k="sc.what.s"></span></div>
+      <div class="mc"><span class="tg h" data-k="sc.human"></span><b data-k="sc.m5.t"></b><p data-k="sc.m5.d"></p></div></div>
+    <div class="wc when"><div class="wh"><b data-k="hs.when"></b><span data-k="sc.when.s"></span></div>
+      <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m2.t"></b><p data-k="sc.m2.d"></p></div>
+      <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m3.t"></b><p data-k="sc.m3.d"></p></div></div>
+  </div><div class="together"><div class="wh"><b data-k="sc.joint"></b><span data-k="sc.joint.s"></span></div>
+    <div class="tgrid">
+      <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m4.t"></b><p data-k="sc.m4.d"></p></div>
+      <div class="mc"><span class="tg h" data-k="sc.both"></span><b data-k="sc.m6.t"></b><p data-k="sc.m6.d"></p></div>
+      <div class="mc"><span class="tg a" data-k="sc.auto"></span><b data-k="sc.m8.t"></b><p data-k="sc.m8.d"></p></div>
+    </div></div></div></details><details class="evidence-detail"><summary data-k="edit.sc.baselines"></summary><div class="detail-body">
+
+
+
+
 
   <div class="g2 blk" style="align-items:start">
     <div class="card"><span class="lbl k" data-k="bl.k"></span><p class="muted small" style="margin-bottom:12px" data-k="bl.lede"></p>
@@ -597,27 +607,21 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
       <div class="bl-g" id="bl"></div></div>
     <div class="card"><ul class="ethic"><li data-k="bl.n1"></li><li data-k="bl.n2"></li><li data-k="bl.n3"></li></ul></div>
   </div>
-</div></section>
+</div></details></div></section>
 
-<!-- quality -->
-<section class="ch" id="c-quality" data-nav="nav.ql"><div class="wrap">
-  <div class="head"><div class="row"><span class="no">07</span><span class="lbl" data-k="ql.label"></span></div><h2 data-k="ql.title"></h2><p class="lede" data-k="ql.lede"></p></div>
-  <div class="stats" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+<section class="ch alt" id="c-quality" data-nav="nav.ql"><div class="wrap"><div class="head"><div class="row"><span class="no">06</span><span class="lbl" data-k="nav.ql"></span></div><h2 data-k="edit.ql.title"></h2><p class="lede" data-k="edit.ql.lede"></p></div><div class="stats" style="grid-template-columns:repeat(3,minmax(0,1fr))">
     <div><b class="num" data-c="13">13</b><p data-k="ql.n1"></p></div>
     <div><b class="num" data-c="7">7</b><p data-k="ql.n2"></p></div>
     <div><b class="num" data-c="18">18</b><p data-k="ql.n3"></p></div>
-  </div>
+  </div><article class="audit-example"><span class="lbl">wsw_0010 · v3-3</span><h3 data-k="edit.ql.example.t"></h3><div class="audit-steps"><div><span class="lbl" data-k="edit.ql.source.k"></span><p data-k="edit.ql.source.d"></p></div><div><span class="lbl" data-k="edit.ql.finding.k"></span><p data-k="edit.ql.finding.d"></p></div><div><span class="lbl" data-k="edit.ql.action.k"></span><p data-k="edit.ql.action.d"></p></div></div></article><p class="editorial-note" data-k="edit.ql.scope"></p><details class="evidence-detail"><summary data-k="edit.ql.more"></summary><div class="detail-body">
+
   <div class="g2 blk" style="align-items:start">
     <div class="card"><span class="lbl k" data-k="ql.dc.k"></span><p class="caption-note" data-k="ql.dc.unit"></p>
       <div class="db-leg"><span><i style="background:var(--who)"></i><span data-k="ql.dc.l1"></span></span><span><i style="background:var(--what)"></i><span data-k="ql.dc.l2"></span></span></div>
       <div class="db" id="db"></div><p class="muted small" style="margin-top:14px" data-k="ql.dc.note"></p></div>
     <div class="card"><span class="lbl k" data-k="ql.f.k"></span><ul class="ethic"><li data-k="ql.f1"></li><li data-k="ql.f2"></li><li data-k="ql.f3"></li><li data-k="ql.f4"></li></ul></div>
   </div>
-</div></section>
-
-<!-- roadmap -->
-<section class="ch alt" id="c-roadmap" data-nav="nav.rm"><div class="wrap">
-  <div class="head"><div class="row"><span class="no">08</span><span class="lbl" data-k="rm.label"></span></div><h2 data-k="rm.title"></h2></div>
+</div></details><details class="evidence-detail"><summary data-k="edit.roadmap.more"></summary><div class="detail-body"><div id="c-roadmap">
   <span class="lbl k" data-k="rm.g.k"></span>
   <div class="gates">
     <div><i>1</i><p data-k="rm.g1"></p><em data-k="rm.open"></em></div>
@@ -648,8 +652,7 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
       <div class="chips" style="margin-top:12px"><span class="chip" data-k="rm.f1"></span><span class="chip" data-k="rm.f2"></span><span class="chip" data-k="rm.f3"></span></div></div>
     <div class="card"><span class="lbl k" data-k="rm.lim.k"></span><ul class="ethic"><li data-k="rm.l1"></li><li data-k="rm.l2"></li><li data-k="rm.l3"></li></ul></div>
   </div>
-  <div class="big" aria-hidden="true"><span>Who</span><span>What</span><span>When</span></div>
-</div></section>
+  </div></div></details></div></section>
 
 <footer><div class="wrap in">
   <strong data-k="ft.name"></strong>
@@ -664,8 +667,137 @@ footer .in{display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;al
 </div></div>
 <div id="cdot"></div><div id="chair"><b id="chT"></b></div>
 
-<script>const DATA={"clips":[{"id":"v1-1","src":0,"dur":254145,"status":"needs_media_review","spk":3,"turns":12},{"id":"v1-2","src":0,"dur":298083,"status":"needs_media_review","spk":3,"turns":7},{"id":"v2-1","src":1,"dur":190015,"status":"text_aligned","spk":2,"turns":9},{"id":"v2-2","src":1,"dur":256026,"status":"text_aligned","spk":2,"turns":5},{"id":"v2-3","src":1,"dur":234031,"status":"text_aligned","spk":2,"turns":6},{"id":"v2-4","src":1,"dur":217025,"status":"text_aligned","spk":2,"turns":9},{"id":"v2-5","src":1,"dur":240013,"status":"text_aligned","spk":2,"turns":8},{"id":"v3-1","src":2,"dur":205035,"status":"text_aligned","spk":2,"turns":7},{"id":"v3-2","src":2,"dur":193019,"status":"needs_media_review","spk":2,"turns":6},{"id":"v3-3","src":2,"dur":180010,"status":"needs_media_review","spk":2,"turns":6},{"id":"v3-4","src":2,"dur":181029,"status":"text_aligned","spk":2,"turns":6},{"id":"v3-5","src":2,"dur":200020,"status":"text_aligned","spk":2,"turns":6},{"id":"v4-1","src":3,"dur":185025,"status":"text_aligned","spk":2,"turns":10},{"id":"v4-2","src":3,"dur":190015,"status":"text_aligned","spk":2,"turns":7},{"id":"v4-3","src":3,"dur":221022,"status":"needs_media_review","spk":2,"turns":8},{"id":"v4-4","src":3,"dur":277029,"status":"text_aligned","spk":2,"turns":4},{"id":"v4-5","src":3,"dur":270028,"status":"text_aligned","spk":2,"turns":6},{"id":"v5-1","src":4,"dur":239020,"status":"needs_media_review","spk":2,"turns":6},{"id":"v5-2","src":4,"dur":210024,"status":"text_aligned","spk":2,"turns":8},{"id":"v5-3","src":4,"dur":283011,"status":"text_aligned","spk":2,"turns":4},{"id":"v5-4","src":4,"dur":212036,"status":"text_aligned","spk":2,"turns":6},{"id":"v5-5","src":4,"dur":208013,"status":"text_aligned","spk":2,"turns":8},{"id":"v5-6","src":4,"dur":230034,"status":"text_aligned","spk":2,"turns":8},{"id":"v5-7","src":4,"dur":291030,"status":"text_aligned","spk":2,"turns":6},{"id":"v5-8","src":4,"dur":222015,"status":"needs_media_review","spk":2,"turns":10}],"demo":[{"id":"wsw_0018","label":"two_close","clip":"v5-2","q":"Who distinguished a situation from a problem, and what should one do about each? Give the supporting segments.","dur":210024,"spk":2,"ev":[[10000,26000],[27000,59000]],"tids":[2,4],"turns":[{"id":1,"spk":1,"s":0,"e":10000},{"id":2,"spk":2,"s":10000,"e":26000},{"id":3,"spk":1,"s":26000,"e":27000},{"id":4,"spk":2,"s":27000,"e":59000},{"id":5,"spk":1,"s":59000,"e":77000},{"id":6,"spk":2,"s":77000,"e":131000},{"id":7,"spk":1,"s":131000,"e":180000},{"id":8,"spk":2,"s":180000,"e":210000}],"nspk":2},{"id":"wsw_0014","label":"two_far","clip":"v4-2","q":"Who explained how exposing a social script changes perception and what comes next in the model? Give the two supporting segments.","dur":190015,"spk":1,"ev":[[0,48000],[136000,190000]],"tids":[1,7],"turns":[{"id":1,"spk":1,"s":0,"e":48000},{"id":2,"spk":2,"s":48000,"e":66000},{"id":3,"spk":1,"s":66000,"e":83000},{"id":4,"spk":2,"s":83000,"e":98000},{"id":5,"spk":1,"s":98000,"e":120000},{"id":6,"spk":2,"s":120000,"e":136000},{"id":7,"spk":1,"s":136000,"e":190000}],"nspk":2},{"id":"wsw_0001","label":"three","clip":"v1-1","q":"Who argued that sharing food can help people overcome fear of one another, and how? When was this said?","dur":254145,"spk":2,"ev":[[219000,242000]],"tids":[10],"turns":[{"id":1,"spk":1,"s":0,"e":10000},{"id":2,"spk":2,"s":10000,"e":38000},{"id":3,"spk":3,"s":39000,"e":54000},{"id":4,"spk":1,"s":55000,"e":66000},{"id":5,"spk":2,"s":67000,"e":105000},{"id":6,"spk":3,"s":106000,"e":155000},{"id":7,"spk":1,"s":156000,"e":172000},{"id":8,"spk":2,"s":173000,"e":205000},{"id":9,"spk":1,"s":206000,"e":218000},{"id":10,"spk":2,"s":219000,"e":242000},{"id":11,"spk":3,"s":243000,"e":250000},{"id":12,"spk":1,"s":251000,"e":254000}],"nspk":3},{"id":"wsw_0020","label":"long","clip":"v5-4","q":"Who discussed waiting for outside approval, and what did they say it accomplishes and suggest doing instead? When was this said?","dur":212036,"spk":2,"ev":[[25000,108000]],"tids":[2,3],"turns":[{"id":1,"spk":1,"s":0,"e":25000},{"id":2,"spk":2,"s":25000,"e":67000},{"id":3,"spk":2,"s":67000,"e":108000},{"id":4,"spk":1,"s":108000,"e":112000},{"id":5,"spk":2,"s":112000,"e":190000},{"id":6,"spk":1,"s":190000,"e":212000}],"nspk":2}]};
+
+<script>
+const DATA={"clips":[{"id":"v1-1","src":0,"dur":254145,"status":"needs_media_review","spk":3,"turns":12},{"id":"v1-2","src":0,"dur":298083,"status":"needs_media_review","spk":3,"turns":7},{"id":"v2-1","src":1,"dur":190015,"status":"text_aligned","spk":2,"turns":9},{"id":"v2-2","src":1,"dur":256026,"status":"text_aligned","spk":2,"turns":5},{"id":"v2-3","src":1,"dur":234031,"status":"text_aligned","spk":2,"turns":6},{"id":"v2-4","src":1,"dur":217025,"status":"text_aligned","spk":2,"turns":9},{"id":"v2-5","src":1,"dur":240013,"status":"text_aligned","spk":2,"turns":8},{"id":"v3-1","src":2,"dur":205035,"status":"text_aligned","spk":2,"turns":7},{"id":"v3-2","src":2,"dur":193019,"status":"needs_media_review","spk":2,"turns":6},{"id":"v3-3","src":2,"dur":180010,"status":"needs_media_review","spk":2,"turns":6},{"id":"v3-4","src":2,"dur":181029,"status":"text_aligned","spk":2,"turns":6},{"id":"v3-5","src":2,"dur":200020,"status":"text_aligned","spk":2,"turns":6},{"id":"v4-1","src":3,"dur":185025,"status":"text_aligned","spk":2,"turns":10},{"id":"v4-2","src":3,"dur":190015,"status":"text_aligned","spk":2,"turns":7},{"id":"v4-3","src":3,"dur":221022,"status":"needs_media_review","spk":2,"turns":8},{"id":"v4-4","src":3,"dur":277029,"status":"text_aligned","spk":2,"turns":4},{"id":"v4-5","src":3,"dur":270028,"status":"text_aligned","spk":2,"turns":6},{"id":"v5-1","src":4,"dur":239020,"status":"needs_media_review","spk":2,"turns":6},{"id":"v5-2","src":4,"dur":210024,"status":"text_aligned","spk":2,"turns":8},{"id":"v5-3","src":4,"dur":283011,"status":"text_aligned","spk":2,"turns":4},{"id":"v5-4","src":4,"dur":212036,"status":"text_aligned","spk":2,"turns":6},{"id":"v5-5","src":4,"dur":208013,"status":"text_aligned","spk":2,"turns":8},{"id":"v5-6","src":4,"dur":230034,"status":"text_aligned","spk":2,"turns":8},{"id":"v5-7","src":4,"dur":291030,"status":"text_aligned","spk":2,"turns":6},{"id":"v5-8","src":4,"dur":222015,"status":"needs_media_review","spk":2,"turns":10}],"demo":[{"id":"wsw_0018","label":"two_close","clip":"v5-2","q":"Who distinguished a situation from a problem, and what should one do about each? Give the supporting segments.","dur":210024,"spk":2,"ev":[[10000,26000],[27000,59000]],"tids":[2,4],"turns":[{"id":1,"spk":1,"s":0,"e":10000},{"id":2,"spk":2,"s":10000,"e":26000},{"id":3,"spk":1,"s":26000,"e":27000},{"id":4,"spk":2,"s":27000,"e":59000},{"id":5,"spk":1,"s":59000,"e":77000},{"id":6,"spk":2,"s":77000,"e":131000},{"id":7,"spk":1,"s":131000,"e":180000},{"id":8,"spk":2,"s":180000,"e":210000}],"nspk":2},{"id":"wsw_0014","label":"two_far","clip":"v4-2","q":"Who explained how exposing a social script changes perception and what comes next in the model? Give the two supporting segments.","dur":190015,"spk":1,"ev":[[0,48000],[136000,190000]],"tids":[1,7],"turns":[{"id":1,"spk":1,"s":0,"e":48000},{"id":2,"spk":2,"s":48000,"e":66000},{"id":3,"spk":1,"s":66000,"e":83000},{"id":4,"spk":2,"s":83000,"e":98000},{"id":5,"spk":1,"s":98000,"e":120000},{"id":6,"spk":2,"s":120000,"e":136000},{"id":7,"spk":1,"s":136000,"e":190000}],"nspk":2},{"id":"wsw_0001","label":"three","clip":"v1-1","q":"Who argued that sharing food can help people overcome fear of one another, and how? When was this said?","dur":254145,"spk":2,"ev":[[219000,242000]],"tids":[10],"turns":[{"id":1,"spk":1,"s":0,"e":10000},{"id":2,"spk":2,"s":10000,"e":38000},{"id":3,"spk":3,"s":39000,"e":54000},{"id":4,"spk":1,"s":55000,"e":66000},{"id":5,"spk":2,"s":67000,"e":105000},{"id":6,"spk":3,"s":106000,"e":155000},{"id":7,"spk":1,"s":156000,"e":172000},{"id":8,"spk":2,"s":173000,"e":205000},{"id":9,"spk":1,"s":206000,"e":218000},{"id":10,"spk":2,"s":219000,"e":242000},{"id":11,"spk":3,"s":243000,"e":250000},{"id":12,"spk":1,"s":251000,"e":254000}],"nspk":3},{"id":"wsw_0020","label":"long","clip":"v5-4","q":"Who discussed waiting for outside approval, and what did they say it accomplishes and suggest doing instead? When was this said?","dur":212036,"spk":2,"ev":[[25000,108000]],"tids":[2,3],"turns":[{"id":1,"spk":1,"s":0,"e":25000},{"id":2,"spk":2,"s":25000,"e":67000},{"id":3,"spk":2,"s":67000,"e":108000},{"id":4,"spk":1,"s":108000,"e":112000},{"id":5,"spk":2,"s":112000,"e":190000},{"id":6,"spk":1,"s":190000,"e":212000}],"nspk":2}]};
 const COPY={"nav.ov": ["概览", "Overview"], "nav.wh": ["为什么重要", "Why it matters"], "nav.tk": ["任务", "Task"], "nav.da": ["数据", "Data"], "nav.an": ["标注", "Annotation"], "nav.sc": ["评分", "Scoring"], "nav.ql": ["数据质量", "Data quality"], "nav.rm": ["路线", "Roadmap"], "hs.k": ["音频对话基准 · v0.1.0-pilot", "Audio dialogue benchmark · v0.1.0-pilot"], "hs.who": ["谁", "Who"], "hs.what": ["说了什么", "What"], "hs.when": ["何时", "When"], "hs.hint": ["选一道题。问题是模型的输入，高亮的时间段是模型要找到的证据。", "Pick an item. The question is the input. The highlighted intervals are the evidence a model must find."], "hs.q": ["问题", "Question"], "hs.spk": ["目标说话人", "Target speaker"], "hs.ev": ["证据", "Evidence"], "hs.int1": ["个时间段", "interval"], "hs.intn": ["个时间段", "intervals"], "hs.l1": ["两段相邻证据", "Two close intervals"], "hs.l2": ["两段相隔较远的证据", "Two distant intervals"], "hs.l3": ["三位说话人", "Three speakers"], "hs.l4": ["一段长证据", "One long interval"], "hero.title": ["谁在什么时候说了什么：音频对话评测基准", "Who said what, and when: a benchmark for audio dialogue"], "hero.sub": ["给定一段访谈音频和一个问题，模型要给出说话人、答案，以及支撑答案的时间段。", "Given an interview clip and a question, a model returns the speaker, the answer and the time intervals that support it."], "meta.role.k": ["角色", "Role"], "meta.role.v": ["标注、评测协议与工具：标注手册、数据说明、转换与评分代码、试点数据集。", "Annotation, benchmark protocol and evaluation tooling: handbook, data card, conversion and scoring code, pilot dataset."], "meta.task.k": ["评测能力", "Measures"], "meta.task.v": ["从音频中判断说话人归属、理解内容、定位时间。", "Speaker attribution, comprehension and temporal grounding from audio."], "meta.data.k": ["数据", "Data"], "meta.data.v": ["25 段英文访谈音频，来自 5 个源视频，共约 94 分 47 秒，标注了 178 个发言轮次。", "25 English interview clips from 5 source videos, about 94 min 47 s, with 178 annotated turns."], "meta.st.k": ["状态", "Status"], "meta.st.v": ["0.1.0-pilot。独立听音复核和留出测试集在计划中。", "0.1.0-pilot. Independent listening review and a held-out test set are planned."], "ov.n1": ["道带证据时间段的题目", "questions with evidence intervals"], "ov.n2": ["个源视频", "source videos"], "ov.n3": ["个标注的发言轮次", "annotated turns"], "ov.n4": ["道默认计分的题（文本已对齐）", "items in the default scoring (text aligned)"], "wh.label": ["为什么重要", "Why it matters"], "wh.title": ["流畅的输出，仍可能在好几处出错", "Fluent output can still be wrong in several ways"], "wh.lede": ["会议纪要读起来通顺，也可能把观点记到别人名下，或把时间戳指向错的位置。这个基准把每一种错误分开计分。", "A meeting summary can read well and still credit a claim to the wrong person or point to the wrong moment. The benchmark scores each failure separately."], "wh.flow.k": ["现有流程中的三个环节", "Three stages in a typical pipeline"], "wh.f1.t": ["语音识别", "Speech recognition"], "wh.f1.d": ["给出文字", "Supplies the words"], "wh.f2.t": ["说话人分离", "Diarization"], "wh.f2.d": ["跟踪说话人切换", "Tracks speaker changes"], "wh.f3.t": ["问答与总结", "Question answering"], "wh.f3.d": ["概括含义", "Summarises meaning"], "wh.f.note": ["多数应用三者都需要。基准评测的是三者合在一起的结果。", "Most applications need all three. The benchmark scores their combined result."], "wh.c1.t": ["说话人错了", "Wrong speaker"], "wh.c1.d": ["主持人的转述被记到嘉宾名下。", "A host's paraphrase is credited to the guest."], "wh.c1.k": ["检查：说话人分配；提问、引用和断言的区别", "Check: speaker assignment; questions vs quotations vs assertions"], "wh.c1.u": ["用于：访谈索引、带出处的会议纪要", "For: interview indexes, source-linked meeting notes"], "wh.c2.t": ["含义被反转", "Reversed meaning"], "wh.c2.d": ["总结漏掉了否定，或颠倒了限定条件。", "A summary drops a negation or flips a qualification."], "wh.c2.k": ["检查：要点、因果方向、条件", "Check: key points, causal direction, conditions"], "wh.c2.u": ["用于：助手评测、质量保证", "For: assistant evaluation, quality assurance"], "wh.c3.t": ["时间戳无法核对", "Unverifiable timestamp"], "wh.c3.d": ["答案指向的那一段并不支持它。", "The answer points to a passage that does not support it."], "wh.c3.k": ["检查：最短的支撑时间段；是否漏掉必要的发言轮次", "Check: shortest supporting intervals; missed necessary turns"], "wh.c3.u": ["用于：音频检索、播放定位", "For: audio retrieval, playback navigation"], "wh.c4.t": ["把语气当成事实", "Delivery mistaken for fact"], "wh.c4.d": ["语气线索被当作身份或内心情绪。", "A tone cue is read as identity or inner emotion."], "wh.c4.k": ["检查：可听见的特征与姓名、角色分开记录", "Check: audible traits recorded apart from names and roles"], "wh.c4.u": ["用于：音频理解诊断", "For: audio comprehension diagnostics"], "tk.label": ["任务", "Task"], "tk.title": ["一个问题，三项答案要核对", "One question, three answers to check"], "tk.lede": ["模型拿到音频和问题，返回片段内的说话人编号、自由文本答案，以及一个或多个证据时间段。一个答案可能需要不连续的多个时间段。", "The model receives the audio and a question. It returns a clip-local speaker ID, a free-text answer and one or more evidence intervals. One answer can need several noncontiguous intervals."], "tk.in.k": ["输入", "Input"], "tk.in1": ["音频片段", "Audio clip"], "tk.in2": ["问题（不含答案）", "Question, answer withheld"], "tk.in3": ["片段时长", "Clip duration"], "tk.in4": ["说话人编号规则", "Speaker numbering rule"], "tk.model": ["模型", "Model"], "tk.out.k": ["输出", "Output"], "tk.out1": ["说话人编号", "Speaker ID"], "tk.out2": ["文字答案", "Free-text answer"], "tk.out3": ["证据时间段", "Evidence intervals"], "tk.json.k": ["预测示例（其中一题，含两个证据时间段）", "Example prediction, with two evidence intervals"], "tk.cond.k": ["五种输入条件", "Five input conditions"], "tk.cond.h0": ["条件", "Condition"], "tk.cond.h1": ["音频", "Audio"], "tk.cond.h2": ["转写", "ASR text"], "tk.cond.h3": ["问题", "Question"], "tk.cond.h4": ["名单", "Roster"], "tk.cond.h5": ["目的", "Purpose"], "tk.cd1.n": ["纯音频主赛道", "Audio-only main track"], "tk.cd1.p": ["评测靠可听证据做出的归属、理解和定位", "Attribution, meaning and timing from audible evidence"], "tk.cd2.n": ["转写对照", "ASR control"], "tk.cd2.p": ["文字输入下的表现", "Performance with text input"], "tk.cd3.n": ["仅问题对照", "Question-only control"], "tk.cd3.p": ["不听音频，模型能从问题推测多少", "What models infer without hearing"], "tk.cd4.n": ["身份扩展", "Identity extension"], "tk.cd4.p": ["给定名单时的具名归属", "Named attribution given a roster"], "tk.cd5.n": ["语气诊断（可选）", "Delivery diagnostic (optional)"], "tk.cd5.p": ["感知到的语气，单独报告一致性", "Perceived delivery, agreement reported separately"], "da.label": ["数据", "Data"], "da.title": ["25 段音频的试点数据集", "A pilot of 25 clips"], "da.lede": ["素材是英文访谈和播客的节选，经两轮标注。每段约 3 到 5 分钟。", "The material is excerpts of English interviews and podcasts, annotated in two rounds. Clips run about 3 to 5 minutes."], "da.bc.k": ["每段音频的时长，按源视频着色", "Clip length, coloured by source video"], "da.bc.leg": ["斜纹表示待复核", "Hatched means needs media review"], "da.src": ["源视频", "Source"], "da.cat.k": ["类别", "Category"], "da.cat1": ["教育与知识", "Education & Knowledge"], "da.cat2": ["生活与日常", "Lifestyle & Daily"], "da.spk.k": ["每段的说话人数", "Speakers per clip"], "da.spk1": ["两位说话人", "Two speakers"], "da.spk2": ["三位说话人", "Three speakers"], "da.st.k": ["复核状态", "Review status"], "da.st1": ["文本已对齐", "Text aligned"], "da.st2": ["待听音复核", "Needs media review"], "da.multi.d": ["道题需要多个证据时间段", "questions need more than one evidence interval"], "da.topics.k": ["话题覆盖", "Topic coverage"], "da.t1": ["饮食与小餐馆文化", "Food and diner culture"], "da.t2": ["身份与心理调适", "Identity and psychological adaptation"], "da.t3": ["青少年发展", "Adolescent development"], "da.t4": ["影响与决策", "Influence and decision-making"], "da.t5": ["个人行动与职业角色", "Personal initiative and professional roles"], "an.label": ["标注", "Annotation"], "an.title": ["两轮标注，再做独立复核", "Two rounds, then independent review"], "an.lede": ["流程在手册里写成可检查的步骤。试点完成了前两轮，复核与放行检查还在计划中。", "The handbook turns the workflow into checkable steps. The pilot completed the first two rounds. Review and release checks are planned."], "an.done": ["已完成", "Done"], "an.plan": ["计划中", "Planned"], "an.s1.t": ["第一轮 · 发言轮次", "Round 1 · Turns"], "an.s1.d": ["按首次可辨认的发言编号说话人，用整数毫秒标时间，记录转写和语气。", "Speaker IDs by first identifiable speech. Integer-millisecond times. Transcript and delivery."], "an.s2.t": ["第二轮 · 问题与证据", "Round 2 · Question and evidence"], "an.s2.d": ["写一个不泄露答案的问题，并关联它所需的每个发言轮次。", "Write a question that withholds the answer and link every turn it needs."], "an.s3.t": ["独立复核", "Independent review"], "an.s3.d": ["复核人在看到参考答案之前先独立作答。", "Reviewer B answers independently before seeing the reference."], "an.s4.t": ["仲裁", "Adjudication"], "an.s4.d": ["第三人听有分歧的片段，记录旧标签、新标签和理由。", "A third reviewer listens to disputed segments and records the rationale."], "an.s5.t": ["放行检查", "Release checks"], "an.s5.d": ["格式、编号、边界、校验和、泄露、分组、授权。", "Schema, IDs, bounds, checksums, leakage, grouping, permissions."], "an.r.k": ["手册里的四条硬规则", "Four rules the handbook enforces"], "an.r1.t": ["时间", "Time"], "an.r1.d": ["[start_ms, end_ms) 半开区间，片段第 0 毫秒为起点。", "Half-open [start_ms, end_ms) intervals, clip-local clock from 0."], "an.r2.t": ["说话人", "Speaker"], "an.r2.d": ["spk_01、spk_02……按首次可辨认的发言编号，同一人再次出现沿用同一编号。", "spk_01, spk_02… by first identifiable speech. A returning speaker keeps the ID."], "an.r3.t": ["问题", "Question"], "an.r3.d": ["不写姓名、答案要点、具体时间和原话。", "Withholds the name, key points, times and exact wording."], "an.r4.t": ["证据", "Evidence"], "an.r4.d": ["取能说明答案的最短完整发言；被插话隔开的段落分别记录。", "The shortest complete utterance that supports the answer. Separated passages stay separate."], "an.e.k": ["手册点名的常见错误", "Errors the handbook names"], "an.e1": ["把引语记到被引用的人名下", "Crediting a quotation to the person quoted"], "an.e2": ["用源视频的时钟代替片段时钟", "Using the source video clock instead of the clip clock"], "an.e3": ["凭声音、外貌或模型猜测身份", "Inferring identity from voice, appearance or a model's guess"], "an.e4": ["把掌声算作发言", "Counting applause as speech"], "an.cal": ["校准：两位标注者独立标注一批试做样本，差异会写回手册。", "Calibration: two annotators label a trial batch independently, and differences update the handbook."], "sc.label": ["评分", "Scoring"], "sc.title": ["把“谁”“什么”“何时”分开评分", "Score who, what and when separately"], "sc.lede": ["归属、含义和时间会各自出错，所以各有各的指标。含义由人工打分。", "Attribution, meaning and timing fail independently, so each has its own metric. Meaning is graded by humans."], "sc.auto": ["自动", "Auto"], "sc.human": ["人工", "Human"], "sc.both": ["自动 + 人工", "Auto + human"], "sc.opt": ["可选", "Optional"], "sc.m1.t": ["说话人准确率", "Speaker Accuracy"], "sc.m1.d": ["片段内说话人编号是否正确。", "Correct clip-local speaker ID."], "sc.m2.t": ["平均 tIoU", "Mean tIoU"], "sc.m2.d": ["预测与参考时间集合的交并比。", "Intersection over union of predicted and reference time sets."], "sc.m3.t": ["R@1（tIoU 0.3 / 0.5 / 0.7）", "R@1 at tIoU 0.3 / 0.5 / 0.7"], "sc.m3.d": ["单次预测达到各阈值的题目占比。", "Share of items whose single prediction reaches each threshold."], "sc.m4.t": ["说话人 + 时间", "Speaker + Time"], "sc.m4.d": ["说话人正确且 tIoU 不低于 0.5。", "Correct speaker and tIoU of at least 0.5."], "sc.m5.t": ["含义得分", "Meaning Credit"], "sc.m5.d": ["每个要点记 0、0.5 或 1；出现实质性矛盾则该题记 0。", "Each key point scores 0, 0.5 or 1. A material contradiction sets the item to 0."], "sc.m6.t": ["联合通过率", "Joint Pass"], "sc.m6.d": ["说话人正确、tIoU 不低于 0.5，且含义满分。", "Correct speaker, tIoU of at least 0.5 and full meaning credit."], "sc.m7.t": ["姓名匹配", "Identity Name Match"], "sc.m7.d": ["姓名规范化后精确匹配。", "Exact match after name normalisation."], "sc.m8.t": ["覆盖率与有效证据率", "Coverage and Valid Evidence"], "sc.m8.d": ["有提交的比例，以及证据格式正确且不越界的比例。", "Share with a submission, and with well-formed in-bounds evidence."], "lab.k": ["动手试试时间分数", "Try the time score"], "lab.lede": ["参考答案有两个时间段（琥珀色）。拖动预测的起止点，看 tIoU、阈值和证据是否有效。", "The reference has two intervals (amber). Drag the prediction and watch tIoU, thresholds and validity."], "lab.ex": ["示例片段，70 秒，数值与手册中的例子一致。", "Illustrative 70 s clip, matching the handbook's worked example."], "lab.ref": ["参考", "Reference"], "lab.pred": ["预测", "Prediction"], "lab.over": ["交集", "Overlap"], "lab.p1": ["两段精确", "Exact"], "lab.p2": ["一段 10–59 秒", "One span 10–59"], "lab.p3": ["整段音频", "Whole clip"], "lab.p4": ["中间 20%", "Middle 20%"], "lab.p5": ["偏后", "Late"], "lab.start": ["起点", "Start"], "lab.end": ["终点", "End"], "lab.valid": ["证据有效", "Valid evidence"], "lab.invalid": ["证据无效", "Invalid evidence"], "lab.note": ["参考为 10–26 秒和 27–59 秒。预测 10–59 秒得 48/49，约 0.980；多出来的中间时间会拉低分数。", "Reference is 10–26 s and 27–59 s. Predicting 10–59 s gives 48/49, about 0.980. Extra intervening time lowers the score."], "bl.k": ["两个基线给出下限", "Two baselines set the floor"], "bl.lede": ["两个基线都固定预测 spk_01，只用片段时长，不听音频。结果基于 18 道文本已对齐的题。", "Both baselines always predict spk_01 and use only the clip duration. Results use the 18 text-aligned items."], "bl.b1": ["第一位说话人 + 整段音频", "First speaker, entire clip"], "bl.b2": ["第一位说话人 + 中间 20%", "First speaker, middle 20%"], "bl.g1": ["说话人准确率", "Speaker Accuracy"], "bl.g2": ["平均 tIoU", "Mean tIoU"], "bl.g3": ["R@1，tIoU ≥ 0.5", "R@1 at tIoU 0.5"], "bl.g4": ["说话人 + 时间", "Speaker + Time"], "bl.n1": ["两个基线的说话人准确率一样，是因为 18 题里有 7 题的目标说话人恰好是 spk_01（38.89%）。", "Speaker accuracy is identical because 7 of the 18 targets happen to be spk_01 (38.89%)."], "bl.n2": ["整段音频的预测会在长发言上得分，所以协议还要求按证据长度分层，并加入联合指标。", "An entire-clip prediction can score on long turns, so the protocol adds breakdowns by evidence length and a joint metric."], "bl.n3": ["这些只是基线，还没有评测任何模型。", "These are baselines. No model has been evaluated yet."], "ql.label": ["数据质量", "Data quality"], "ql.title": ["先审计，再信任", "Audit before trust"], "ql.lede": ["试点数据由两轮原始标注转换而来。审计记录了每一处修复，并把 7 道题列入听音复核队列。", "The pilot was converted from two rounds of source annotation. The audit records every repair and queues seven items for listening review."], "ql.n1": ["条记录的 JSON 引号被修复", "records with repaired JSON quotes"], "ql.n2": ["道题进入听音复核队列", "items queued for listening review"], "ql.n3": ["道题已完成文本对齐", "items text aligned"], "ql.dc.k": ["源标注中的时长与本地音频时长（秒）", "Duration in the source annotation vs the local audio (seconds)"], "ql.dc.l1": ["源标注", "Source annotation"], "ql.dc.l2": ["本地 MP3", "Local MP3"], "ql.dc.gap": ["秒差", "s gap"], "ql.dc.note": ["wsw_0009 与 wsw_0010 的源时间窗相同，但音视频字节不同。问题解决前，这两段要放在同一个数据划分里。", "wsw_0009 shares a source window with wsw_0010 but has different audio and video bytes. Keep both clips in the same split until resolved."], "ql.f.k": ["转换时做的修复", "Repairs made during conversion"], "ql.f1": ["13 条记录的 JSON 引号语法已修复", "Quote syntax repaired in 13 records"], "ql.f2": ["旧编号映射为补零的新编号", "Legacy IDs mapped to zero-padded IDs"], "ql.f3": ["四段式时钟已规范化；两个无效时钟存为 null 并加标记", "Four-part clocks normalised; two invalid clocks stored as null with a flag"], "ql.f4": ["问题经改写以减少答案泄露", "Questions rewritten to reduce answer leakage"], "rm.label": ["路线", "Roadmap"], "rm.title": ["从试点到正式（gold）发布", "From pilot to gold release"], "rm.g.k": ["正式发布的五项条件", "Five gates for a gold release"], "rm.g1": ["核对片段版本、源偏移和 SHA-256，并解决 7 道听音复核题。", "Verify clip version, source offset and SHA-256. Resolve the seven review items."], "rm.g2": ["两位复核人独立核对每题的含义和最小证据，并记录仲裁。", "Two reviewers verify meaning and minimal evidence for each item. Record adjudication."], "rm.g3": ["检查重复、重叠、共享说话人和节目、答案泄露，并冻结划分。", "Check duplicates, overlap, shared speakers and programs, leakage. Freeze splits."], "rm.g4": ["写明媒体授权，以及评测人如何回放证据。", "Document media permissions and how evaluators replay the evidence."], "rm.g5": ["发布格式、数据说明、评测命令、基线、分布，以及固定的版本和提交号。", "Publish schemas, data card, commands, baselines, distributions, a fixed version and commit hash."], "rm.open": ["未开始", "Open"], "rm.th.k": ["拟定的通过门槛（试点上尚未测量）", "Proposed acceptance thresholds (not yet measured on the pilot)"], "rm.th1": ["说话人一致率", "Speaker agreement"], "rm.th2": ["tIoU 中位数", "Median tIoU"], "rm.th3": ["要点一致率", "Key-point agreement"], "rm.sp.k": ["拟扩展到 800 题时的划分目标", "Split targets for the proposed 800-item expansion"], "rm.sp1": ["开发集", "Development"], "rm.sp2": ["验证集", "Validation"], "rm.sp3": ["留出测试集", "Held-out test"], "rm.sp.note": ["按源视频分组划分，同一来源、近重复和重叠的片段放在同一份里。这些比例是规划目标。", "Split by source video. Clips from the same source, near duplicates and overlaps stay in the same split. Ratios are planning targets."], "rm.run.k": ["复现", "Reproduce"], "rm.run.note": ["需要 Python 3.10 以上，只用标准库，可离线运行。", "Python 3.10 or later, standard library only, runs offline."], "rm.f1": ["7 个 JSON Schema", "7 JSON Schemas"], "rm.f2": ["单元测试与 CI", "Unit tests and CI"], "rm.f3": ["转换、校验、评分三个命令", "Convert, validate and score commands"], "rm.lim.k": ["边界", "Limits"], "rm.l1": ["5 个源视频撑不起模型排名，试点用于检查流程和分析错误。", "Five source videos cannot support model rankings. The pilot checks the workflow and supports error analysis."], "rm.l2": ["源素材没有声明开放再分发许可，媒体和原文转写只保存在本地。", "The source materials have no declared open redistribution licence. Media and verbatim transcripts stay local."], "rm.l3": ["这个页面只使用片段时长、发言轮次边界、问题和证据时间段，不包含转写和姓名。", "This page uses only clip durations, turn boundaries, questions and evidence intervals. It contains no transcripts or names."], "rm.big": ["Who · What · When", "Who · What · When"], "ft.name": ["林尚澄 Katherine Lin", "Katherine Lin 林尚澄"], "ft.copy": ["复制邮箱", "Copy email"], "ft.copied": ["已复制", "Copied"], "ui.close": ["关闭", "Close"]};
+// Case-study reading layer; benchmark values remain unchanged.
+Object.assign(COPY,{
+  "edit.task.title": [
+    "一个答案，三个检查",
+    "One answer, three checks"
+  ],
+  "edit.task.lede": [
+    "流畅的回答仍可能弄错说话人、遗漏限定条件，或指向错误的片段。我把这三种错误分别保留下来评估。",
+    "A fluent answer can name the wrong speaker, lose a qualification or point to the wrong passage. I kept those failures separate in the evaluation."
+  ],
+  "edit.task.decision": [
+    "模型接收音频与问题，返回片段内说话人编号、答案和支持它的时间段。证据可以分散在多次发言中，不能用一个连续范围抹去中间无关的内容。",
+    "The model receives audio and a question, then returns a clip-local speaker ID, an answer and supporting intervals. Evidence can span separate turns; the representation preserves the gaps between them."
+  ],
+  "edit.task.more": [
+    "错误类型、输入条件与预测格式",
+    "Failure cases, input conditions and prediction format"
+  ],
+  "edit.data.lede": [
+    "当前交付是 25 题试点、两轮标注流程、数据格式与可复现的校验及评分工具。",
+    "The current delivery is a 25-item pilot, a two-round annotation workflow, structured formats and reproducible validation and scoring tools."
+  ],
+  "edit.data.status": [
+    "18 题完成文本对齐，7 题需优先媒体复核。全部 25 题仍待独立听审；没有 gold 测试集或留出测试划分。",
+    "18 items are text aligned and 7 need priority media review. All 25 await independent listening review. There is no gold or held-out test set."
+  ],
+  "edit.data.more": [
+    "查看语料来源、分布与多区间问题",
+    "Corpus sources, distributions and multi-interval items"
+  ],
+  "edit.an.title": [
+    "让答案与证据保持对应",
+    "Keep answers linked to their evidence"
+  ],
+  "edit.an.lede": [
+    "两轮标注先记录谁在何时说话，再把问题、答案要点与支持片段对应起来。",
+    "Two annotation rounds first record who speaks when, then connect questions and answer key points to supporting passages."
+  ],
+  "edit.an.separation": [
+    "我把模型输入和评测材料分开：参考答案、源身份与审计记录保留在评测侧，避免把本应推断的信息交给模型。",
+    "I separated model inputs from evaluator material. Reference answers, source identities and audit records remain with the evaluator so the model must infer the information being tested."
+  ],
+  "edit.an.example.t": [
+    "保留被遗漏的第二段证据",
+    "Keep the missing second passage"
+  ],
+  "edit.an.example.d": [
+    "逐片段标注支持两个时间段，但汇总记录遗漏了后一个。我保留这两个分离的区间，并把差异写入迁移审计。",
+    "The per-clip records support two intervals, but the aggregate omitted the second turn. I kept both separate intervals and recorded the discrepancy in the migration audit."
+  ],
+  "edit.an.example.gap": [
+    "中间内容不计入证据",
+    "gap excluded"
+  ],
+  "edit.an.example.limit": [
+    "这是基于提交文本的修订，仍需独立听审确认。",
+    "This is a text-based evidence edit. Independent listening review is still pending."
+  ],
+  "edit.an.more": [
+    "完整标注流程、格式规则与复核计划",
+    "Full annotation workflow, format rules and review plan"
+  ],
+  "edit.sc.joint": [
+    "Joint Pass 要求说话人正确、tIoU ≥ 0.5 且含义满分。含义需要另附人工 judgments，并同时报告评分覆盖率。",
+    "Joint Pass requires the correct speaker, tIoU ≥ 0.5 and full meaning credit. Meaning needs separate human judgments, with grading coverage reported alongside the score."
+  ],
+  "edit.sc.baseline": [
+    "在默认 18 题上，整段时长基线的平均 tIoU 为 0.3043，中间 20% 基线为 0.1098。它们只用于诊断固定时间猜测；尚未评测任何模型。",
+    "On the default 18 items, the whole-clip baseline has mean tIoU 0.3043 and the middle-20% baseline 0.1098. These diagnose fixed time guesses. No model has been evaluated."
+  ],
+  "edit.sc.metrics": [
+    "查看完整八项指标",
+    "View all eight metrics"
+  ],
+  "edit.sc.baselines": [
+    "查看诊断基线与解读",
+    "Diagnostic baselines and interpretation"
+  ],
+  "edit.ql.title": [
+    "审计改变了什么",
+    "What the audit changed"
+  ],
+  "edit.ql.lede": [
+    "转换时修复可确定的格式问题；时间与版本冲突保留标记，进入听音复核队列。",
+    "Conversion repairs determinate format errors. Timing and version conflicts stay flagged for listening review."
+  ],
+  "edit.ql.example.t": [
+    "把无法确认的时间留给复核",
+    "Flag timing that cannot yet be verified"
+  ],
+  "edit.ql.source.k": [
+    "原始记录",
+    "Source record"
+  ],
+  "edit.ql.source.d": [
+    "报告时长 193 秒。",
+    "Reported duration: 193 seconds."
+  ],
+  "edit.ql.finding.k": [
+    "审计发现",
+    "Audit finding"
+  ],
+  "edit.ql.finding.d": [
+    "本地音频约 180.010 秒，并有两个无效的发言时钟。",
+    "Local audio is approximately 180.010 seconds, with two invalid turn clocks."
+  ],
+  "edit.ql.action.k": [
+    "处理决定",
+    "Decision"
+  ],
+  "edit.ql.action.d": [
+    "无效端点记为 null 并加标记；该题等待媒体复核，默认评分不纳入。",
+    "Store invalid endpoints as null with a flag. Keep the item in media review and outside the default scoring set."
+  ],
+  "edit.ql.scope": [
+    "试点可验证工具流程和帮助分析错误。规模和来源集中度尚不足以支持可靠模型排名。下一步是独立听审、核对媒体版本与授权，再冻结按来源分组的划分。",
+    "The pilot checks the tooling workflow and supports error analysis. Its size and source concentration limit reliable model rankings. Next come independent listening review, media and permission verification, then frozen source-grouped splits."
+  ],
+  "edit.ql.more": [
+    "查看完整修复记录与时长对比",
+    "Full repair notes and duration comparison"
+  ],
+  "edit.roadmap.more": [
+    "正式发布条件、规划门槛与 800 题目标",
+    "Gold-release gates, proposed thresholds and the 800-item target"
+  ]
+});
 (function(){
 'use strict';
 var $=function(s,r){return (r||document).querySelector(s)},$$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
@@ -963,9 +1095,12 @@ if(FINE&&!RM){
   addEventListener('pointerdown',function(e){var p=document.createElement('i');p.id='cping';p.style.left=e.clientX+'px';p.style.top=e.clientY+'px';document.body.appendChild(p);setTimeout(function(){p.remove()},650)});
 }
 
+$$('details').forEach(function(d){d.addEventListener('toggle',function(){scheduleTitleFit();onScroll()})});
+
 /* ---------- init ---------- */
 $$('.langs button').forEach(function(b){b.addEventListener('click',function(){setLang(b.dataset.l,true)})});
 setLang(lang);buildChips();buildHero();sizeEv();setPlay();onScroll();requestAnimationFrame(frame);
 if(document.fonts){document.fonts.ready.then(scheduleTitleFit);document.fonts.addEventListener('loadingdone',scheduleTitleFit)}
 })();
+
 </script></body></html>
